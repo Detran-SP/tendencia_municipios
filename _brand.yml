@@ -1,0 +1,20 @@
+typography:
+  fonts:
+    - family: Open Sans
+      source: google
+      weight: [400, 700]
+  base:
+    family: Open Sans
+    weight: 400
+  headings:
+    family: Open Sans
+    color: darkblue
+    weight: 700
+  link:
+    color: darkblue
+    decoration: underline
+color:
+  palette:
+    blue: "#005CA8"
+    darkblue: "#004077"
+  primary: darkblue

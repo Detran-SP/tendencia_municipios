@@ -1,0 +1,120 @@
+---
+title: "Análise de Tendência da Sinistralidade em Municípios"
+subtitle: "Nota Técnica 01"
+date: last-modified
+author: "Divisão de Estudos para Segurança no Trânsito"
+format: 
+  html:
+    lang: pt-BR
+    toc: true
+    fig-align: center
+    cap-location: top
+    fig-height: 4
+    fig-width: 6
+    fig-dpi: 300
+execute: 
+  warning: false
+  message: false
+  echo: false
+  freeze: auto
+editor_options: 
+  chunk_output_type: console
+knitr:
+  opts_knit:
+    fig.showtext: true
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(infosiga)
+library(janitor)
+library(tidyverse)
+library(trend)
+library(showtext)
+library(zoo)
+
+source("R/data.R")
+source("R/modelo.R")
+source("R/plot.R")
+
+font_add_google("Open Sans", "opensans")
+showtext_opts(dpi = 300)
+showtext_auto()
+
+detran_palette <- list(
+    "blue" = "#005ca8",
+    "lightblue" = "#3490ce",
+    "darkblue" = "#004077"
+)
+
+theme_detran = function() {
+    theme_linedraw(
+        base_family = "opensans"
+    ) +
+    theme(text = element_text(size = 16))
+}
+
+```
+
+## Introdução
+
+## Metodologia
+
+### Tratamento dos dados
+
+```{r}
+#| label: dados_obitos
+
+df_obitos = load_obitos(infosiga_vitimas, infosiga_sinistros)
+df_base = load_municipios("data/divisoes_regionais_esp.csv")
+df_model = create_model_df(df_base, df_obitos)
+```
+
+### Teste de Mann-Kendall
+
+```{r}
+#| label: timeseries
+
+time_series = map(unique(df_model$cod_ibge), create_time_series, df = df_model)
+names(time_series) = unique(df_model$municipio)
+
+mk_results = map(time_series, mk.test)
+df_mk_results = arrange_mk_results(mk_results)
+```
+
+
+## Resultados
+
+```{r}
+df_model |> 
+    filter(municipio == "São Paulo") |> 
+    ggplot(aes(x = ano_mes, y = n, group = 1)) +
+    geom_line(color = detran_palette$darkblue, lwd = 0.3) +
+    scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+    theme_detran() +
+    labs(x = NULL, y = NULL)
+```
+
+<!-- 
+
+* Tabela de resultados significativos.
+
+* Mapa de todos os resultados
+    * Redução (nao-significativo)
+    * Redução (significativo)
+    * Aumento (nao-significativo)
+    * Aumento (significativo)
+
+-->
+
+### Caso 01 - São Paulo
+
+### Caso 02 - Campinas
+
+### Caso 03 - Médio porte
+
+### Caso 04 - Pequeno porte
+
+## Conclusão
