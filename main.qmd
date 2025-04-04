@@ -34,28 +34,35 @@ library(tidyverse)
 library(trend)
 library(showtext)
 library(zoo)
+library(gt)
+library(readxl)
+library(geobr)
+library(sf)
+library(leaflet)
+library(plotly)
 
 source("R/data.R")
 source("R/modelo.R")
-source("R/plot.R")
+source("R/results.R")
 
-font_add_google("Open Sans", "opensans")
-showtext_opts(dpi = 300)
-showtext_auto()
+#font_add_google("Open Sans", "opensans")
+#showtext_opts(dpi = 300)
+#showtext_auto()
 
 detran_palette <- list(
     "blue" = "#005ca8",
     "lightblue" = "#3490ce",
-    "darkblue" = "#004077"
+    "darkblue" = "#004077",
+    "purple" = "#390077",
+    "lightpurple" = "#D3A1FA"
 )
 
-theme_detran = function() {
-    theme_linedraw(
-        base_family = "opensans"
-    ) +
-    theme(text = element_text(size = 16))
-}
+```
 
+```{css}
+div.leaflet-control {
+  text-align: left;
+}
 ```
 
 ## Introdução
@@ -69,37 +76,104 @@ theme_detran = function() {
 
 df_obitos = load_obitos(infosiga_vitimas, infosiga_sinistros)
 df_base = load_municipios("data/divisoes_regionais_esp.csv")
-df_model = create_model_df(df_base, df_obitos)
+df_model_obitos = create_model_df(df_base, df_obitos)
+
+```
+
+```{r}
+#| label: dados_sinistros_vitimas
+
+df_sinistros_vitimas = load_sinistros_vitimas(infosiga_sinistros)
+df_model_sinistros_vitimas = create_model_df(df_base, df_sinistros_vitimas)
+```
+
+```{r}
+#| label: dados_populacao
+
+df_populacao = load_populacao("https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2024/POP2024_20241230.xls")
+
+```
+
+```{r}
+#| label: spatial_data
+
+sf_municipios = load_mun_sf()
 ```
 
 ### Teste de Mann-Kendall
 
 ```{r}
-#| label: timeseries
+#| label: mk_obitos
 
-time_series = map(unique(df_model$cod_ibge), create_time_series, df = df_model)
-names(time_series) = unique(df_model$municipio)
+time_series_obitos = map(
+    unique(df_model_obitos$cod_ibge),
+    create_time_series,
+    df = df_model_obitos
+)
 
-mk_results = map(time_series, mk.test)
-df_mk_results = arrange_mk_results(mk_results)
+names(time_series_obitos) = unique(df_model_obitos$municipio)
+
+mk_results_obitos = map(time_series_obitos, mk.test)
+df_mk_results_obitos = arrange_mk_results(mk_results_obitos, df_model_obitos)
+df_final_obitos = df_mk_results_obitos |>
+    left_join(df_populacao, by = "cod_ibge")
+```
+
+```{r}
+#| label: mk_sinistros
+
+time_series_sinistros_vitimas = map(
+    unique(df_model_sinistros_vitimas$cod_ibge),
+    create_time_series,
+    df = df_model_sinistros_vitimas
+)
+
+names(time_series_sinistros_vitimas) = unique(
+    df_model_sinistros_vitimas$municipio
+)
+
+mk_results_sinistros_vitimas = map(time_series_sinistros_vitimas, mk.test)
+df_mk_results_sinistros_vitimas = arrange_mk_results(
+    mk_results_sinistros_vitimas, 
+    df_model_sinistros_vitimas
+)
+
+df_final_sinistros_vitimas = df_mk_results_sinistros_vitimas |> 
+    left_join(df_populacao, by = "cod_ibge")
+
 ```
 
 
 ## Resultados
 
+### Óbitos
+
+
 ```{r}
-df_model |> 
-    filter(municipio == "São Paulo") |> 
-    ggplot(aes(x = ano_mes, y = n, group = 1)) +
-    geom_line(color = detran_palette$darkblue, lwd = 0.3) +
-    scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
-    theme_detran() +
-    labs(x = NULL, y = NULL)
+#| label: tbl-resultados-aumento
+#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos
+
+make_tendencia_gt(df_final_obitos, "pos")
+```
+
+```{r}
+#| label: tbl-resultados-reducao
+#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos
+
+make_tendencia_gt(df_final_obitos, "neg")
+```
+
+```{r}
+#| label: fig-mapa-obitos
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos
+
+sf_mapa_obitos = arrange_mk_sf(sf_municipios, df_final_obitos)
+plot_leaflet_map(sf_mapa_obitos, type = "obitos")
 ```
 
 <!-- 
 
-* Tabela de resultados significativos.
+* Colocar a população dos municípios nas tabelas
 
 * Mapa de todos os resultados
     * Redução (nao-significativo)
@@ -107,14 +181,116 @@ df_model |>
     * Aumento (nao-significativo)
     * Aumento (significativo)
 
+
+* Tabela geral (obitos, sinistros com feridos, sinistros totais --- apenas significativos)
 -->
 
-### Caso 01 - São Paulo
+#### Caso 01 - Cotia
 
-### Caso 02 - Campinas
+```{r}
+#| label: fig-caso01
+#| fig-cap: Série temporal dos óbitos em Cotia
 
-### Caso 03 - Médio porte
+make_plotly(df_model_obitos, "Cotia", "obitos")
 
-### Caso 04 - Pequeno porte
+```
+
+#### Caso 02 - Presidente Prudente
+
+```{r}
+#| label: fig-caso02
+#| fig-cap: Série temporal dos óbitos em Presidente Prudente
+
+make_plotly(df_model_obitos, "Presidente Prudente", "obitos")
+
+```
+
+### Sinistros com Vítimas Feridas
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros
+#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com vítimas feridas
+
+make_tendencia_gt(df_final_sinistros_vitimas, "pos")
+```
+
+```{r}
+#| label: tbl-resultados-reducao-sinistros
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas
+
+make_tendencia_gt(df_final_sinistros_vitimas, "neg")
+```
+
+```{r}
+#| label: fig-mapa-sinistros-vitimas
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas
+
+sf_mapa_sinistros_vitimas = arrange_mk_sf(
+    sf_municipios, 
+    df_final_sinistros_vitimas
+)
+plot_leaflet_map(sf_mapa_sinistros_vitimas, type = "sinistros")
+```
+
+#### Caso 03 - Guarulhos
+
+```{r}
+#| label: fig-caso03
+#| fig-cap: Série temporal dos sinistros com vítimas em Guarulhos
+
+make_plotly(df_model_sinistros_vitimas, "Guarulhos", "sinistros")
+
+```
+
+#### Caso 04 - Bauru
+
+```{r}
+#| label: fig-caso04
+#| fig-cap: Série temporal dos sinistros com vítimas em Bauru
+
+make_plotly(df_model_sinistros_vitimas, "Bauru", "sinistros")
+
+```
+
+### Municípios críticos
+
+```{r}
+#| label: tbl-final
+#| tbl-cap: Municípios com tendência aumento de óbitos e/ou sinistros com vítimas
+
+df_tendencia_obitos = df_mk_results_obitos |> 
+    filter_mun_criticos()
+
+df_tendencia_sinistros_vitimas = df_mk_results_sinistros_vitimas |> 
+    filter_mun_criticos()
+
+df_base |> 
+    left_join(df_tendencia_obitos, by = c("municipio" = "nome")) |> 
+    left_join(df_tendencia_sinistros_vitimas, by = c("municipio" = "nome")) |> 
+    filter(!is.na(aumento.x) | !is.na(aumento.y)) |> 
+    arrange(municipio) |> 
+    replace_na(list(aumento.x = "-", aumento.y = "-")) |> 
+    select(-cod_ibge) |> 
+    gt() |> 
+    cols_label(
+        municipio = "Município",
+        aumento.x = "Óbitos",
+        aumento.y = "Sinistros com Vítimas"
+    ) |> 
+    tab_spanner(
+        columns = starts_with("aumento"),
+        label = "Tendência de aumento"
+    ) |> 
+    tab_options(table.font.size = "11pt") |>
+    opt_interactive(
+        use_pagination = TRUE,
+        use_sorting = FALSE,
+        page_size_default = 15,
+        use_compact_mode = TRUE,
+        use_highlight = TRUE,
+        use_filters = TRUE
+    )
+    
+```
 
 ## Conclusão

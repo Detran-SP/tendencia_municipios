@@ -6,8 +6,9 @@ create_time_series <- function(df, cod_input) {
     ts(values, start = c(2015, 1), frequency = 12)
 }
 
-arrange_mk_results <- function(results) {
+arrange_mk_results <- function(results, base_df) {
     df = tibble(
+        cod_ibge = NULL,
         nome = NULL,
         p_value = NULL,
         s = NULL,
@@ -25,6 +26,8 @@ arrange_mk_results <- function(results) {
         )
         df = bind_rows(df, df_i)
     }
+
+    df$cod_ibge = unique(base_df$cod_ibge)
 
     return(df)
 }
