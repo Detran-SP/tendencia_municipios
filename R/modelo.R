@@ -1,9 +1,9 @@
 create_time_series <- function(df, cod_input) {
-    values = df |> 
-        filter(cod_ibge == cod_input) |> 
+    values = df |>
+        filter(cod_ibge == cod_input) |>
         pull(n)
 
-    ts(values, start = c(2015, 1), frequency = 12)
+    ts(values, start = c(year(first(df$ano_mes)), 1), frequency = 12)
 }
 
 arrange_mk_results <- function(results, base_df) {
@@ -30,4 +30,26 @@ arrange_mk_results <- function(results, base_df) {
     df$cod_ibge = unique(base_df$cod_ibge)
 
     return(df)
+}
+
+arrange_final_results <- function(
+    df_results,
+    df_model,
+    var
+) {
+    df_ts = df_model |>
+        group_by(cod_ibge, year(ano_mes)) |>
+        summarise(n = sum(n)) |>
+        filter(`year(ano_mes)` < 2025) |>
+        group_by(cod_ibge) |>
+        summarise(ts = paste(n, collapse = ","))
+
+    df_results |>
+        pivot_longer(
+            cols = p_value:tau,
+            names_to = "metric",
+            values_to = "value"
+        ) |>
+        mutate(variavel = var) |>
+        left_join(df_ts, by = "cod_ibge")
 }

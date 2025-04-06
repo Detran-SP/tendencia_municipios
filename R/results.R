@@ -1,4 +1,6 @@
-make_tendencia_gt = function(df, direcao = c("pos", "neg")) {
+make_tendencia_gt = function(df, direcao = c("pos", "neg"), var) {
+    df = df |> pivot_wider(names_from = metric, values_from = value)
+
     if (direcao == "pos") {
         df = df |>
             filter(tau > 0) |>
@@ -8,18 +10,33 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg")) {
             filter(tau < 0) |>
             arrange(tau)
     }
+    footnote_text = ifelse(
+        grepl("Óbitos", var),
+        "Período entre 2015 e 2024",
+        "Período entre 2019 e 2024"
+    )
+
     df |>
-        filter(p_value < 0.05) |>
-        select(nome, populacao_estimada, p_value, tau) |>
+        filter(p_value < 0.05, variavel == var) |>
+        select(nome, populacao_estimada, tau, ts) |>
         gt() |>
+        cols_nanoplot(
+            columns = ts,
+            reference_line = "mean",
+            options = nanoplot_options(
+                data_point_fill_color = detran_palette$darkblue,
+                data_line_stroke_color = detran_palette$darkblue,
+                data_area_fill_color = NULL
+            )
+        ) |>
         cols_label(
-            nome = "Nome",
+            nome = "Município",
             populacao_estimada = "População",
-            p_value = "p-valor",
-            tau = "Tau"
+            tau = "Tau",
+            nanoplots = "Série temporal anual"
         ) |>
         fmt_number(
-            columns = -nome,
+            columns = tau,
             decimals = 4,
             dec_mark = ",",
             sep_mark = "."
@@ -27,21 +44,35 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg")) {
         fmt_number(
             columns = populacao_estimada,
             decimals = 0,
-            sep_mark = "."
+            sep_mark = ".",
+            dec_mark = ","
         ) |>
         tab_options(table.font.size = "11pt") |>
+        cols_align(
+            columns = nanoplots,
+            align = "right"
+        ) |>
+        tab_footnote(
+            footnote = footnote_text,
+            locations = cells_column_labels(columns = nanoplots)
+        ) |>
         opt_interactive(
             use_pagination = TRUE,
             use_sorting = FALSE,
             page_size_default = 15,
             use_compact_mode = TRUE,
-            use_highlight = TRUE
+            use_highlight = TRUE,
+            use_filters = TRUE
         )
 }
 
-arrange_mk_sf = function(sf_sp, df_results) {
-    sf_mapa = sf_sp |>
-        left_join(df_results, by = "cod_ibge") |>
+arrange_mk_sf = function(sf_sp, df_results, var) {
+    df = df_results |>
+        filter(metric %in% c("p_value", "tau"), variavel == var) |>
+        pivot_wider(
+            names_from = metric,
+            values_from = value
+        ) |>
         mutate(
             significancia = if_else(
                 p_value < 0.05,
@@ -54,14 +85,18 @@ arrange_mk_sf = function(sf_sp, df_results) {
                 "Tendência de redução"
             ),
             status = paste0(tendencia, " ", significancia),
-            status = if_else(status == "NA NA", "Sem óbitos", status)
+            status = if_else(status == "NA NA", "Sem valores", status)
         )
+
+    sf_mapa = sf_sp |>
+        left_join(df, by = "cod_ibge")
+
     return(sf_mapa)
 }
 
-plot_leaflet_map = function(sf, type = c("obitos", "sinistros")) {
+plot_leaflet_map = function(sf) {
 
-    if (type == "obitos") {
+    if ("Sem valores" %in% unique(sf$status)) {
         pal = colorFactor(
             palette = c(
                 "grey50",

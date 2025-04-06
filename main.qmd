@@ -67,6 +67,10 @@ div.leaflet-control {
 
 ## Introdução
 
+O objetivo dessa nota técnica é apresentar uma análise de tendência da sinistralidade no trânsito em municípios do estado de São Paulo, com base em dados do Infosiga.SP. A análise se concentra em identificar tendências de aumento ou redução na quantidade de óbitos e sinistros com vítimas feridas, considerando diferentes tipos de vias e modos de transporte.
+
+A análise de tendência foi realizada com base no método de Mann-Kendall, que é amplamente utilizado para detectar tendências em séries temporais. Observa-se que a tendência analisada nesse trabalho é apenas um norte para diagnosticar a situação da segurança viária de um município. A análise de tendência não deve ser utilizada como um indicador isolado, mas sim como parte de uma avaliação mais abrangente que considere outros fatores relevantes.
+
 ## Metodologia
 
 ### Tratamento dos dados
@@ -74,17 +78,39 @@ div.leaflet-control {
 ```{r}
 #| label: dados_obitos
 
-df_obitos = load_obitos(infosiga_vitimas, infosiga_sinistros)
+list_df_obitos = map2(
+    c("total", "Vias municipais", "Rodovias", "total", "total", "total"),
+    c("total", "total", "total", "Pedestre", "Bicicleta", "Motocicleta"),
+    load_obitos,
+    df_vitimas = infosiga_vitimas,
+    df_sinistros = infosiga_sinistros
+)
+
 df_base = load_municipios("data/divisoes_regionais_esp.csv")
-df_model_obitos = create_model_df(df_base, df_obitos)
+
+list_df_model_obitos = map(
+    list_df_obitos,
+    create_model_df,
+    df_base = df_base
+)
 
 ```
 
 ```{r}
 #| label: dados_sinistros_vitimas
 
-df_sinistros_vitimas = load_sinistros_vitimas(infosiga_sinistros)
-df_model_sinistros_vitimas = create_model_df(df_base, df_sinistros_vitimas)
+list_df_sinistros = map2(
+    c("total", "Vias municipais", "Rodovias", "total", "total", "total"),
+    c("total", "total", "total", "Pedestre", "Bicicleta", "Motocicleta"),
+    load_sinistros_vitimas,
+    df_sinistros = infosiga_sinistros
+)
+
+list_df_model_sinistros = map(
+    list_df_sinistros,
+    create_model_df,
+    df_base = df_base
+)
 ```
 
 ```{r}
@@ -102,195 +128,555 @@ sf_municipios = load_mun_sf()
 
 ### Teste de Mann-Kendall
 
-```{r}
-#| label: mk_obitos
+O Teste de Mann-Kendall é um método estatístico não paramétrico utilizado para detectar tendências monotônicas em séries temporais. Por não assumir uma distribuição específica dos dados, é especialmente útil em estudos ambientais, hidrológicos e climáticos, onde os dados podem apresentar variabilidade significativa e não seguir distribuições normais.
 
-time_series_obitos = map(
-    unique(df_model_obitos$cod_ibge),
-    create_time_series,
-    df = df_model_obitos
-)
+O teste avalia se há uma tendência crescente ou decrescente ao longo do tempo, sem exigir que essa tendência seja linear. A estatística de teste é baseada no número de pares ordenados de observações em que os valores posteriores são maiores ou menores que os anteriores. A significância da tendência é avaliada por meio do p-valor associado à estatística de Mann-Kendall, permitindo inferir se a tendência observada é randômica ou não.
 
-names(time_series_obitos) = unique(df_model_obitos$municipio)
+Um dos resultados numéricos do teste é o coeficiente Tau, que é uma medida de correlação que expressa a direção e a força da tendência em uma série temporal. Seu valor varia entre -1 e 1, onde valores próximos a 1 indicam uma forte tendência crescente, valores próximos a -1 indicam uma forte tendência decrescente e valores próximos a 0 sugerem ausência de tendência.
 
-mk_results_obitos = map(time_series_obitos, mk.test)
-df_mk_results_obitos = arrange_mk_results(mk_results_obitos, df_model_obitos)
-df_final_obitos = df_mk_results_obitos |>
-    left_join(df_populacao, by = "cod_ibge")
-```
+
 
 ```{r}
-#| label: mk_sinistros
+#| label: mk-test
 
-time_series_sinistros_vitimas = map(
-    unique(df_model_sinistros_vitimas$cod_ibge),
-    create_time_series,
-    df = df_model_sinistros_vitimas
+list_df_model = c(list_df_model_obitos, list_df_model_sinistros)
+
+list_time_series = map(
+    list_df_model,
+    function(x) {
+        map(
+            unique(x$cod_ibge),
+            create_time_series,
+            df = x
+        )
+    }
 )
 
-names(time_series_sinistros_vitimas) = unique(
-    df_model_sinistros_vitimas$municipio
+city_names = unique(list_df_model[[1]]$municipio)
+
+for (i in 1:length(list_time_series)) {
+    names(list_time_series[[i]]) = city_names
+}
+
+list_mk_results = map(
+    list_time_series,
+    function(x) map(x, mk.test)
 )
 
-mk_results_sinistros_vitimas = map(time_series_sinistros_vitimas, mk.test)
-df_mk_results_sinistros_vitimas = arrange_mk_results(
-    mk_results_sinistros_vitimas, 
-    df_model_sinistros_vitimas
+list_df_mk_results = map2(
+    list_mk_results,
+    list_df_model,
+    arrange_mk_results
 )
 
-df_final_sinistros_vitimas = df_mk_results_sinistros_vitimas |> 
+input_list = list(
+    list_df_mk_results,
+    list_df_model,
+    list(
+        "Óbitos totais",
+        "Óbitos em vias municipais",
+        "Óbitos em rodovias",
+        "Óbitos - pedestres",
+        "Óbitos - ciclistas",
+        "Óbitos - ocupantes de motocicleta",
+        "Sinistros com vítimas feridas",
+        "Sinistros com vítimas feridas (vias municipais)",
+        "Sinistros com vítimas feridas (rodovias)",
+        "Sinistros com vítimas feridas - pedestres",
+        "Sinistros com vítimas feridas - ciclistas",
+        "Sinistros com vítimas feridas - ocupantes de motocicleta"
+    )
+)
+
+df_final = pmap(input_list,arrange_final_results) |> 
+    reduce(bind_rows) |> 
     left_join(df_populacao, by = "cod_ibge")
 
 ```
-
 
 ## Resultados
 
 ### Óbitos
 
+#### Tendência de aumento
+
+::: {.panel-tabset}
+## Total
 
 ```{r}
-#| label: tbl-resultados-aumento
+#| label: tbl-resultados-aumento-total
 #| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos
 
-make_tendencia_gt(df_final_obitos, "pos")
+make_tendencia_gt(df_final, "pos", "Óbitos totais")
 ```
+
+## Vias municipais
 
 ```{r}
-#| label: tbl-resultados-reducao
+#| label: tbl-resultados-aumento-municipal
+#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos em vias municipais
+
+make_tendencia_gt(df_final, "pos", "Óbitos em vias municipais")
+```
+
+## Rodovias
+
+```{r}
+#| label: tbl-resultados-aumento-rodovias
+#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos em rodovias
+
+make_tendencia_gt(df_final, "pos", "Óbitos em rodovias")
+```
+
+## Pedestres
+
+```{r}
+#| label: tbl-resultados-aumento-pedestres
+#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos de pedestres
+
+make_tendencia_gt(df_final, "pos", "Óbitos - pedestres")
+```
+
+## Ciclistas
+
+```{r}
+#| label: tbl-resultados-aumento-ciclistas
+#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos de ciclistas
+
+make_tendencia_gt(df_final, "pos", "Óbitos - ciclistas")
+```
+
+## Ocupantes de motocicleta
+
+```{r}
+#| label: tbl-resultados-aumento-motociclistas
+#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos de ocupantes de motocicleta
+
+make_tendencia_gt(df_final, "pos", "Óbitos - ocupantes de motocicleta")
+```
+
+:::
+
+#### Tendência de redução
+
+::: {.panel-tabset}
+## Total
+
+```{r}
+#| label: tbl-resultados-reducao-total
 #| tbl-cap: Municípios com tendência de redução na quantidade de óbitos
 
-make_tendencia_gt(df_final_obitos, "neg")
+make_tendencia_gt(df_final, "neg", "Óbitos totais")
 ```
+
+## Vias municipais
+
+```{r}
+#| label: tbl-resultados-redução-municipal
+#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos em vias municipais
+
+make_tendencia_gt(df_final, "neg", "Óbitos em vias municipais")
+```
+
+## Rodovias
+
+```{r}
+#| label: tbl-resultados-redução-rodovias
+#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos em rodovias
+
+make_tendencia_gt(df_final, "neg", "Óbitos em rodovias")
+```
+
+## Pedestres
+
+```{r}
+#| label: tbl-resultados-reducao-pedestres
+#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos de pedestres
+
+make_tendencia_gt(df_final, "neg", "Óbitos - pedestres")
+```
+
+## Ciclistas
+
+```{r}
+#| label: tbl-resultados-reducao-ciclistas
+#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos de ciclistas
+
+make_tendencia_gt(df_final, "neg", "Óbitos - ciclistas")
+
+```
+
+## Ocupantes de motocicleta
+
+```{r}
+#| label: tbl-resultados-reducao-motociclistas
+#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos de ocupantes de motocicleta
+
+make_tendencia_gt(
+    df_final,
+    "neg",
+    "Óbitos - ocupantes de motocicleta"
+)
+```
+
+:::
+
+#### Mapas de tendência
+
+:::{.panel-tabset}
+
+## Total
 
 ```{r}
 #| label: fig-mapa-obitos
 #| fig-cap: Mapa da tendência resultante, considerando os óbitos
 
-sf_mapa_obitos = arrange_mk_sf(sf_municipios, df_final_obitos)
-plot_leaflet_map(sf_mapa_obitos, type = "obitos")
+list_sf = map(
+   input_list[[3]],
+   arrange_mk_sf,
+   df_results = df_final,
+   sf_sp = sf_municipios 
+)
+
+plot_leaflet_map(list_sf[[1]])
 ```
 
-<!-- 
-
-* Colocar a população dos municípios nas tabelas
-
-* Mapa de todos os resultados
-    * Redução (nao-significativo)
-    * Redução (significativo)
-    * Aumento (nao-significativo)
-    * Aumento (significativo)
-
-
-* Tabela geral (obitos, sinistros com feridos, sinistros totais --- apenas significativos)
--->
-
-#### Caso 01 - Cotia
+## Vias municipais
 
 ```{r}
-#| label: fig-caso01
-#| fig-cap: Série temporal dos óbitos em Cotia
+#| label: fig-mapa-obitos-municipal
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos em vias municipais
 
-make_plotly(df_model_obitos, "Cotia", "obitos")
-
+plot_leaflet_map(list_sf[[2]])
 ```
 
-#### Caso 02 - Presidente Prudente
+## Rodovias
 
 ```{r}
-#| label: fig-caso02
-#| fig-cap: Série temporal dos óbitos em Presidente Prudente
+#| label: fig-mapa-obitos-rodovia
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos em rodovias
 
-make_plotly(df_model_obitos, "Presidente Prudente", "obitos")
+plot_leaflet_map(list_sf[[3]])
+```
+
+## Pedestres
+
+```{r}
+#| label: fig-mapa-obitos-pedestres
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos de pedestres
+
+plot_leaflet_map(list_sf[[4]])
+```
+
+## Ciclistas
+
+```{r}
+#| label: fig-mapa-obitos-ciclistas
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos de ciclistas
+
+plot_leaflet_map(list_sf[[5]])
 
 ```
+
+## Ocupantes de motocicleta
+
+```{r}
+#| label: fig-mapa-obitos-motociclistas
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos de ocupantes de motocicleta
+
+plot_leaflet_map(list_sf[[6]])
+```
+
+:::
 
 ### Sinistros com Vítimas Feridas
+
+#### Tendência de aumento
+
+::: {.panel-tabset}
+## Total
 
 ```{r}
 #| label: tbl-resultados-aumento-sinistros
 #| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com vítimas feridas
 
-make_tendencia_gt(df_final_sinistros_vitimas, "pos")
+make_tendencia_gt(
+    df_final,
+    "pos",
+    "Sinistros com vítimas feridas"
+)
 ```
+
+## Vias municipais
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros-municipais
+#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com vítimas feridas (vias municipais)
+
+make_tendencia_gt(
+    df_final,
+    "pos",
+    "Sinistros com vítimas feridas (vias municipais)"
+)
+```
+
+## Rodovias
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros-rodovias
+#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com vítimas feridas (rodovias)
+
+make_tendencia_gt(
+    df_final,
+    "pos",
+    "Sinistros com vítimas feridas (rodovias)"
+)
+```
+
+## Pedestres
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros-pedestres
+#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com pedestres feridos
+
+make_tendencia_gt(
+    df_final,
+    "pos",
+    "Sinistros com vítimas feridas - pedestres"
+)
+```
+
+## Ciclistas
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros-ciclistas
+#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com ciclistas feridos
+
+make_tendencia_gt(
+    df_final,
+    "pos",
+    "Sinistros com vítimas feridas - ciclistas"
+)
+```
+
+## Ocupantes de motocicleta
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros-motociclistas
+#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com ocupantes de motocicleta feridos
+
+make_tendencia_gt(
+    df_final,
+    "pos",
+    "Sinistros com vítimas feridas - ocupantes de motocicleta"
+)
+```
+
+:::
+
+#### Tendência de redução
+
+::: {.panel-tabset}
+## Total
 
 ```{r}
 #| label: tbl-resultados-reducao-sinistros
 #| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas
 
-make_tendencia_gt(df_final_sinistros_vitimas, "neg")
-```
-
-```{r}
-#| label: fig-mapa-sinistros-vitimas
-#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas
-
-sf_mapa_sinistros_vitimas = arrange_mk_sf(
-    sf_municipios, 
-    df_final_sinistros_vitimas
+make_tendencia_gt(
+    df_final,
+    "neg",
+    "Sinistros com vítimas feridas"
 )
-plot_leaflet_map(sf_mapa_sinistros_vitimas, type = "sinistros")
 ```
 
-#### Caso 03 - Guarulhos
+## Vias municipais
 
 ```{r}
-#| label: fig-caso03
-#| fig-cap: Série temporal dos sinistros com vítimas em Guarulhos
+#| label: tbl-resultados-reducao-sinistros-municipais
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (vias municipais)
 
-make_plotly(df_model_sinistros_vitimas, "Guarulhos", "sinistros")
-
+make_tendencia_gt(
+    df_final,
+    "neg",
+    "Sinistros com vítimas feridas (vias municipais)"
+)
 ```
 
-#### Caso 04 - Bauru
+## Rodovias
 
 ```{r}
-#| label: fig-caso04
-#| fig-cap: Série temporal dos sinistros com vítimas em Bauru
+#| label: tbl-resultados-reducao-sinistros-rodovias
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (rodovias)
 
-make_plotly(df_model_sinistros_vitimas, "Bauru", "sinistros")
-
+make_tendencia_gt(
+    df_final,
+    "neg",
+    "Sinistros com vítimas feridas (rodovias)"
+)
 ```
 
-### Municípios críticos
+## Pedestres
+
+```{r}
+#| label: tbl-resultados-reducao-sinistros-pedestres
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com pedestres feridos
+
+make_tendencia_gt(
+    df_final,
+    "neg",
+    "Sinistros com vítimas feridas - pedestres"
+)
+```
+
+## Ciclistas
+
+```{r}
+#| label: tbl-resultados-reducao-sinistros-ciclistas
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com ciclistas feridos
+
+make_tendencia_gt(
+    df_final,
+    "neg",
+    "Sinistros com vítimas feridas - ciclistas"
+)
+```
+
+## Ocupantes de motocicleta
+
+```{r}
+#| label: tbl-resultados-reducao-sinistros-motociclistas
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com ocupantes de motocicleta feridos
+
+make_tendencia_gt(
+    df_final,
+    "neg",
+    "Sinistros com vítimas feridas - ocupantes de motocicleta"
+)
+```
+
+:::
+
+#### Mapas de tendência
+
+::: {.panel-tabset}
+
+## Total
+
+```{r}
+#| label: fig-mapa-sinistros
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas
+
+plot_leaflet_map(list_sf[[7]])
+```
+
+## Vias municipais
+
+```{r}
+#| label: fig-mapa-sinistros-municipais
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas em vias municipais
+
+plot_leaflet_map(list_sf[[8]])
+```
+
+## Rodovias
+
+```{r}
+#| label: fig-mapa-sinistros-rodovias
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas em rodovias
+
+plot_leaflet_map(list_sf[[9]])
+```
+
+## Pedestres
+```{r}
+#| label: fig-mapa-sinistros-pedestres
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com pedestres feridos
+
+plot_leaflet_map(list_sf[[10]])
+```
+
+## Ciclistas
+
+```{r}
+#| label: fig-mapa-sinistros-ciclistas
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com ciclistas feridos
+
+plot_leaflet_map(list_sf[[11]])
+```
+
+## Ocupantes de motocicleta
+```{r}
+#| label: fig-mapa-sinistros-motociclistas
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com ocupantes de motocicleta feridos
+
+plot_leaflet_map(list_sf[[12]])
+```
+
+:::
+
+### Tabela-resumo
 
 ```{r}
 #| label: tbl-final
 #| tbl-cap: Municípios com tendência aumento de óbitos e/ou sinistros com vítimas
 
-df_tendencia_obitos = df_mk_results_obitos |> 
-    filter_mun_criticos()
-
-df_tendencia_sinistros_vitimas = df_mk_results_sinistros_vitimas |> 
-    filter_mun_criticos()
+df_tbl = df_final |> 
+    filter(metric %in% c("p_value", "tau")) |> 
+    pivot_wider(names_from = metric, values_from = value) |> 
+    filter(p_value < 0.05, tau > 0) |> 
+    mutate(aumento = "Sim") |> 
+    select(cod_ibge, variavel, aumento) |> 
+    pivot_wider(names_from = variavel, values_from = aumento, values_fill = "-")
 
 df_base |> 
-    left_join(df_tendencia_obitos, by = c("municipio" = "nome")) |> 
-    left_join(df_tendencia_sinistros_vitimas, by = c("municipio" = "nome")) |> 
-    filter(!is.na(aumento.x) | !is.na(aumento.y)) |> 
     arrange(municipio) |> 
-    replace_na(list(aumento.x = "-", aumento.y = "-")) |> 
+    left_join(df_populacao, by = "cod_ibge") |> 
+    left_join(df_tbl, by = "cod_ibge") |> 
+    mutate(
+        across(
+            .cols = `Óbitos totais`:`Sinistros com vítimas feridas - ocupantes de motocicleta`,
+            .fns = ~ if_else(is.na(.x), "-", .x)
+        )
+    ) |> 
     select(-cod_ibge) |> 
     gt() |> 
     cols_label(
         municipio = "Município",
-        aumento.x = "Óbitos",
-        aumento.y = "Sinistros com Vítimas"
+        populacao_estimada = "População",
+        `Óbitos totais` = "Total",
+        `Óbitos em vias municipais` = "Vias municipais",
+        `Óbitos em rodovias` = "Rodovias",
+        `Óbitos - pedestres` = "Pedestres",
+        `Óbitos - ciclistas` = "Ciclistas",
+        `Óbitos - ocupantes de motocicleta` = "Motociclistas",
+        `Sinistros com vítimas feridas` = "Total",
+        `Sinistros com vítimas feridas (vias municipais)` = "Vias municipais",
+        `Sinistros com vítimas feridas (rodovias)` = "Rodovias",
+        `Sinistros com vítimas feridas - pedestres` = "Pedestres",
+        `Sinistros com vítimas feridas - ciclistas` = "Ciclistas",
+        `Sinistros com vítimas feridas - ocupantes de motocicleta` = "Motociclistas"
     ) |> 
     tab_spanner(
-        columns = starts_with("aumento"),
-        label = "Tendência de aumento"
+        label = "Óbitos",
+        columns = `Óbitos totais`:`Óbitos - ocupantes de motocicleta`,
+        id = "obitos"
+    ) |>
+    tab_spanner(
+        label = "Sinistros com vítimas feridas",
+        columns = `Sinistros com vítimas feridas`:`Sinistros com vítimas feridas - ocupantes de motocicleta`,
+        id = "sinistros"
     ) |> 
-    tab_options(table.font.size = "11pt") |>
     opt_interactive(
         use_pagination = TRUE,
-        use_sorting = FALSE,
+        use_sorting = TRUE,
         page_size_default = 15,
         use_compact_mode = TRUE,
         use_highlight = TRUE,
         use_filters = TRUE
     )
-    
 ```
 
 ## Conclusão
+
+A simples análise de uma série temporal da sinistralidade no município não é suficiente para avaliar a gravidade de seu cenário, ou a tendência dessa gravidade. Os resultados aqui apresentados servem como um ponto de partida para uma análise mais aprofundada, que deve considerar outros fatores, que incluem as características locais dos municípios.
