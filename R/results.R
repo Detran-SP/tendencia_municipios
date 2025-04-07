@@ -204,3 +204,22 @@ filter_mun_criticos <- function(df_results) {
         mutate(aumento = "Sim") |>
         select(nome, aumento)
 }
+
+extract_df_len <- function(df, var, tendencia = c("pos", "neg")) {
+    df = df |>
+        filter(variavel == var) |>
+        pivot_wider(names_from = metric, values_from = value)
+
+    if (tendencia == "pos") {
+        df = df |>
+            filter(tau > 0)
+    } else {
+        df = df |>
+            filter(tau < 0)
+    }
+
+    df |>
+        filter(p_value < 0.05) |>
+        nrow()
+}
+
