@@ -115,3 +115,10 @@ load_sinistros_vitimas <- function(
 
     return(df)
 }
+
+load_snt = function(path) {
+    read_excel(path) |>
+        clean_names() |>
+        mutate(municipio = tolower(municipio), integracao_snt = "Sim") |>
+        select(municipio, integracao_snt)
+}

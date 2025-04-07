@@ -135,6 +135,13 @@ df_populacao = load_populacao("https://ftp.ibge.gov.br/Estimativas_de_Populacao/
 sf_municipios = load_mun_sf()
 ```
 
+```{r}
+#| label: integracao_snt
+
+df_snt = load_snt("data/integracao_snt.xlsx")
+```
+
+
 ### Teste de Mann-Kendall
 
 O Teste de Mann-Kendall é um método estatístico não paramétrico utilizado para detectar tendências monotônicas em séries temporais. Por não assumir uma distribuição específica dos dados, é especialmente útil em estudos ambientais, hidrológicos e climáticos, onde os dados podem apresentar variabilidade significativa e não seguir distribuições normais [@mann1945; @kendall1975].
