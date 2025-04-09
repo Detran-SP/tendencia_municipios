@@ -135,5 +135,5 @@ export_final_data = function(df, path) {
             cod_ibge, nome, variavel, populacao_estimada, integrado_snt,
             p_value, tau
         ) |>
-        write_csv("path")
+        write_csv(path)
 }

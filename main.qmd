@@ -694,13 +694,7 @@ A simples análise de uma série temporal da sinistralidade no município não �
 ```{r}
 #| label: export_df
 
-df_final |>
-   pivot_wider(names_from = metric, values_from = value) |>
-   select(
-        cod_ibge, nome, variavel, populacao_estimada, integrado_snt,
-        p_value, tau
-    ) |>
-    write_csv("data/df_final.csv")
+export_final_data(df_final, "data/df_final.csv")
 ```
 
 
