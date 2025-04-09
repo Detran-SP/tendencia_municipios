@@ -13,6 +13,17 @@ tar_source("R/modelo.R")
 tar_source("R/results.R")
 
 list(
+    ## Setup
+    tar_target(
+        detran_palette,
+        list(
+            "blue" = "#005ca8",
+            "lightblue" = "#3490ce",
+            "darkblue" = "#004077",
+            "purple" = "#390077",
+            "lightpurple" = "#D3A1FA"
+        )
+    ),
     ## Dados
     tar_target(
         input_tipo_via,
@@ -111,6 +122,51 @@ list(
         df_final_raw,
         pmap(input_list, arrange_final_results) |> reduce(bind_rows)
     ),
-    tar_target(df_final, join_final_df(df_final_raw, df_populacao, df_snt))
+    tar_target(df_final, join_final_df(df_final_raw, df_populacao, df_snt)),
     ## Resultados
+    tar_target(
+        list_gt_tendencia_pos,
+        map(
+            input_list[[3]],
+            make_tendencia_gt,
+            df = df_final,
+            direcao = "pos",
+            color_pal = detran_palette
+        )
+    ),
+    tar_target(
+        list_gt_tendencia_neg,
+        map(
+            input_list[[3]],
+            make_tendencia_gt,
+            df = df_final,
+            direcao = "neg",
+            color_pal = detran_palette
+        )
+    ),
+    tar_target(
+        list_sf,
+        map(
+            input_list[[3]],
+            arrange_mk_sf,
+            df_results = df_final,
+            sf_sp = sf_municipios
+        )
+    ),
+    tar_target(
+        tendencia_maps,
+        map(list_sf, plot_leaflet_map, color_pal = detran_palette)
+    ),
+    tar_target(gt_resumo,
+        make_gt_resumo(
+            df_final,
+            df_base,
+            df_populacao,
+            df_snt
+        )
+    ),
+    ## Report
+    ## Export
+    tar_target(path_export_csv, "data/df_final.csv", format = "file"),
+    tar_target(df_final_export, export_final_data(df_final, path_export_csv), format = "file")
 )

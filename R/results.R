@@ -1,4 +1,4 @@
-make_tendencia_gt = function(df, direcao = c("pos", "neg"), var) {
+make_tendencia_gt = function(df, direcao = c("pos", "neg"), var, color_pal) {
     df = df |> pivot_wider(names_from = metric, values_from = value)
 
     if (direcao == "pos") {
@@ -24,8 +24,8 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var) {
             columns = ts,
             reference_line = "mean",
             options = nanoplot_options(
-                data_point_fill_color = detran_palette$darkblue,
-                data_line_stroke_color = detran_palette$darkblue,
+                data_point_fill_color = color_pal$darkblue,
+                data_line_stroke_color = color_pal$darkblue,
                 data_area_fill_color = NULL
             )
         ) |>
@@ -95,26 +95,26 @@ arrange_mk_sf = function(sf_sp, df_results, var) {
     return(sf_mapa)
 }
 
-plot_leaflet_map = function(sf) {
+plot_leaflet_map = function(sf, color_pal) {
 
     if ("Sem valores" %in% unique(sf$status)) {
         pal = colorFactor(
             palette = c(
                 "grey50",
-                detran_palette$lightpurple,
-                detran_palette$purple,
-                detran_palette$lightblue,
-                detran_palette$blue
+                color_pal$lightpurple,
+                color_pal$purple,
+                color_pal$lightblue,
+                color_pal$blue
             ),
             domain = unique(sf$status)
         )
     } else {
         pal = colorFactor(
             palette = c(
-                detran_palette$lightpurple,
-                detran_palette$purple,
-                detran_palette$lightblue,
-                detran_palette$blue
+                color_pal$lightpurple,
+                color_pal$purple,
+                color_pal$lightblue,
+                color_pal$blue
             ),
             domain = unique(sf$status)
         )
