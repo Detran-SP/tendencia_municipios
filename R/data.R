@@ -118,7 +118,22 @@ load_sinistros_vitimas <- function(
 
 load_snt = function(path) {
     read_excel(path) |>
-        clean_names() |>
-        mutate(municipio = tolower(municipio), integracao_snt = "Sim") |>
-        select(municipio, integracao_snt)
+        mutate(
+            cod_ibge = as.character(cod_ibge),
+            integrado_snt = if_else(
+                integrado_snt == "SIM",
+                "Sim",
+                "Não"
+            )
+        )
+}
+
+export_final_data = function(df, path) {
+    df |>
+        pivot_wider(names_from = metric, values_from = value) |>
+        select(
+            cod_ibge, nome, variavel, populacao_estimada, integrado_snt,
+            p_value, tau
+        ) |>
+        write_csv(path)
 }

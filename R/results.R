@@ -18,7 +18,7 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var) {
 
     df |>
         filter(p_value < 0.05, variavel == var) |>
-        select(nome, populacao_estimada, tau, ts) |>
+        select(nome, populacao_estimada, integrado_snt, tau, ts) |>
         gt() |>
         cols_nanoplot(
             columns = ts,
@@ -33,6 +33,7 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var) {
             nome = "Município",
             populacao_estimada = "População",
             tau = "Tau",
+            integrado_snt = "Integrado ao SNT",
             nanoplots = "Série temporal anual"
         ) |>
         fmt_number(
@@ -221,5 +222,90 @@ extract_df_len <- function(df, var, tendencia = c("pos", "neg")) {
     df |>
         filter(p_value < 0.05) |>
         nrow()
+}
+
+make_gt_resumo <- function(df_final, df_base, df_populacao, df_snt) {
+    df_tbl = df_final |>
+        filter(metric %in% c("p_value", "tau")) |>
+        pivot_wider(names_from = metric, values_from = value) |>
+        filter(p_value < 0.05, tau > 0) |>
+        mutate(aumento = "Sim") |>
+        select(cod_ibge, variavel, aumento) |>
+        pivot_wider(
+            names_from = variavel,
+            values_from = aumento,
+            values_fill = "-"
+        )
+
+    df_base |>
+        arrange(municipio) |>
+        left_join(df_populacao, by = "cod_ibge") |>
+        left_join(df_tbl, by = "cod_ibge") |>
+        left_join(df_snt, by = "cod_ibge") |>
+        mutate(
+            across(
+                .cols = `Óbitos totais`:`Sinistros com vítimas feridas - ocupantes de motocicleta`,
+                .fns = ~ if_else(is.na(.x), "-", .x)
+            )
+        ) |>
+        select(
+            municipio, populacao_estimada,
+            integrado_snt, everything(), -cod_ibge
+        ) |>
+        gt() |>
+        cols_label(
+            municipio = "Município",
+            populacao_estimada = "População",
+            integrado_snt = "Integrado ao SNT",
+            `Óbitos totais` = "Total",
+            `Óbitos em vias municipais` = "Vias municipais",
+            `Óbitos em rodovias` = "Rodovias",
+            `Óbitos - pedestres` = "Pedestres",
+            `Óbitos - ciclistas` = "Ciclistas",
+            `Óbitos - ocupantes de motocicleta` = "Motociclistas",
+            `Sinistros com vítimas feridas` = "Total",
+            `Sinistros com vítimas feridas (vias municipais)` = "Vias municipais",
+            `Sinistros com vítimas feridas (rodovias)` = "Rodovias",
+            `Sinistros com vítimas feridas - pedestres` = "Pedestres",
+            `Sinistros com vítimas feridas - ciclistas` = "Ciclistas",
+            `Sinistros com vítimas feridas - ocupantes de motocicleta` = "Motociclistas"
+        ) |>
+        tab_spanner(
+            label = "Óbitos",
+            columns = `Óbitos totais`:`Óbitos - ocupantes de motocicleta`,
+            id = "obitos"
+        ) |>
+        tab_spanner(
+            label = "Sinistros com vítimas feridas",
+            columns = `Sinistros com vítimas feridas`:`Sinistros com vítimas feridas - ocupantes de motocicleta`,
+            id = "sinistros"
+        ) |>
+        fmt_number(
+            columns = populacao_estimada,
+            decimals = 0,
+            sep_mark = ".",
+            dec_mark = ","
+        ) |>
+        tab_style(
+            style = cell_borders(
+                sides = "right",
+                color = "grey"
+            ),
+            location = cells_body(
+                columns = c(
+                    integrado_snt,
+                    `Óbitos - ocupantes de motocicleta`
+                )
+            )
+        ) |>
+        opt_interactive(
+            use_pagination = TRUE,
+            use_sorting = TRUE,
+            page_size_default = 20,
+            use_compact_mode = TRUE,
+            use_highlight = TRUE,
+            use_filters = TRUE
+        ) |>
+        tab_options(table.font.size = "11pt")
 }
 

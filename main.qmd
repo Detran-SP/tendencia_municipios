@@ -1,6 +1,6 @@
 ---
 title: "Análise de Tendência da Sinistralidade em Municípios"
-subtitle: "Nota Técnica 01"
+subtitle: "Nota Técnica 01 - V01"
 date: last-modified
 author: "Divisão de Estudos para Segurança no Trânsito"
 format: 
@@ -138,7 +138,7 @@ sf_municipios = load_mun_sf()
 ```{r}
 #| label: integracao_snt
 
-df_snt = load_snt("data/integracao_snt.xlsx")
+df_snt = load_snt("data/snt_municipios.xlsx")
 ```
 
 
@@ -205,7 +205,8 @@ input_list = list(
 
 df_final = pmap(input_list, arrange_final_results) |> 
     reduce(bind_rows) |> 
-    left_join(df_populacao, by = "cod_ibge")
+    left_join(df_populacao, by = "cod_ibge") |> 
+    left_join(df_snt, by = "cod_ibge")
 
 ```
 
@@ -677,88 +678,24 @@ plot_leaflet_map(list_sf[[12]])
 ### Tabela-resumo {#sec-results-tbl-resumo}
 
 A @tbl-final apresenta a lista dos 645 municípios do estado e o indicativo se ele possui alguma tendência de aumento considerando as categorias anteriormente apresentadas.
-
+     
 ```{r}
 #| label: tbl-final
 #| tbl-cap: Municípios com tendência aumento de óbitos e/ou sinistros com vítimas
 
-df_tbl = df_final |> 
-    filter(metric %in% c("p_value", "tau")) |> 
-    pivot_wider(names_from = metric, values_from = value) |> 
-    filter(p_value < 0.05, tau > 0) |> 
-    mutate(aumento = "Sim") |> 
-    select(cod_ibge, variavel, aumento) |> 
-    pivot_wider(names_from = variavel, values_from = aumento, values_fill = "-")
+make_gt_resumo(df_final, df_base, df_populacao, df_snt)
 
-df_base |> 
-    arrange(municipio) |> 
-    left_join(df_populacao, by = "cod_ibge") |> 
-    left_join(df_tbl, by = "cod_ibge") |> 
-    mutate(
-        across(
-            .cols = `Óbitos totais`:`Sinistros com vítimas feridas - ocupantes de motocicleta`,
-            .fns = ~ if_else(is.na(.x), "-", .x)
-        )
-    ) |> 
-    select(-cod_ibge) |> 
-    gt() |> 
-    cols_label(
-        municipio = "Município",
-        populacao_estimada = "População",
-        `Óbitos totais` = "Total",
-        `Óbitos em vias municipais` = "Vias municipais",
-        `Óbitos em rodovias` = "Rodovias",
-        `Óbitos - pedestres` = "Pedestres",
-        `Óbitos - ciclistas` = "Ciclistas",
-        `Óbitos - ocupantes de motocicleta` = "Motociclistas",
-        `Sinistros com vítimas feridas` = "Total",
-        `Sinistros com vítimas feridas (vias municipais)` = "Vias municipais",
-        `Sinistros com vítimas feridas (rodovias)` = "Rodovias",
-        `Sinistros com vítimas feridas - pedestres` = "Pedestres",
-        `Sinistros com vítimas feridas - ciclistas` = "Ciclistas",
-        `Sinistros com vítimas feridas - ocupantes de motocicleta` = "Motociclistas"
-    ) |> 
-    tab_spanner(
-        label = "Óbitos",
-        columns = `Óbitos totais`:`Óbitos - ocupantes de motocicleta`,
-        id = "obitos"
-    ) |>
-    tab_spanner(
-        label = "Sinistros com vítimas feridas",
-        columns = `Sinistros com vítimas feridas`:`Sinistros com vítimas feridas - ocupantes de motocicleta`,
-        id = "sinistros"
-    ) |> 
-    fmt_number(
-        columns = populacao_estimada,
-        decimals = 0,
-        sep_mark = ".",
-        dec_mark = ","
-    ) |> 
-    tab_style(
-        style = cell_borders(
-            sides = "right",
-            color = "grey"
-        ),
-        location = cells_body(
-            columns = c(
-                populacao_estimada, 
-                `Óbitos - ocupantes de motocicleta`
-            )
-        )
-    ) |> 
-    opt_interactive(
-        use_pagination = TRUE,
-        use_sorting = TRUE,
-        page_size_default = 20,
-        use_compact_mode = TRUE,
-        use_highlight = TRUE,
-        use_filters = TRUE
-    ) |> 
-    tab_options(table.font.size = "11pt")
 ```
 
 ## Conclusão
 
 A simples análise de uma série temporal da sinistralidade no município não é suficiente para avaliar a gravidade de seu cenário, ou a tendência dessa gravidade. Os resultados aqui apresentados servem como um ponto de partida para uma análise mais aprofundada, que deve considerar outros fatores, que incluem as características locais dos municípios.
+
+```{r}
+#| label: export_df
+
+export_final_data(df_final, "data/df_final.csv")
+```
+
 
 ## Referências
