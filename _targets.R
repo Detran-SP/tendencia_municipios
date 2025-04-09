@@ -57,7 +57,60 @@ list(
     ),
     tar_target(sf_municipios, load_mun_sf()),
     tar_target(path_snt, "data/snt_municipios.xlsx", format = "file"),
-    tar_target(df_snt, load_snt(path_snt))
+    tar_target(df_snt, load_snt(path_snt)),
     ## Modelagem
+    tar_target(list_df_model, c(list_df_model_obitos, list_df_model_sinistros)),
+    tar_target(
+        list_time_series_raw,
+        map(
+            list_df_model,
+            function(x) {
+                map(
+                    unique(x$cod_ibge),
+                    create_time_series,
+                    df = x
+                )
+            }
+        )
+    ),
+    tar_target(city_names, unique(list_df_model[[1]]$municipio)),
+    tar_target(
+        list_time_series,
+        set_list_names(list_time_series_raw, city_names)
+    ),
+    tar_target(
+        list_mk_results,
+        map(list_time_series, function(x) map(x, mk.test))
+    ),
+    tar_target(
+        list_df_mk_results,
+        map2(list_mk_results, list_df_model, arrange_mk_results)
+    ),
+    tar_target(
+        input_list,
+        list(
+            list_df_mk_results,
+            list_df_model,
+            list(
+                "Óbitos totais",
+                "Óbitos em vias municipais",
+                "Óbitos em rodovias",
+                "Óbitos - pedestres",
+                "Óbitos - ciclistas",
+                "Óbitos - ocupantes de motocicleta",
+                "Sinistros com vítimas feridas",
+                "Sinistros com vítimas feridas (vias municipais)",
+                "Sinistros com vítimas feridas (rodovias)",
+                "Sinistros com vítimas feridas - pedestres",
+                "Sinistros com vítimas feridas - ciclistas",
+                "Sinistros com vítimas feridas - ocupantes de motocicleta"
+            )
+        )
+    ),
+    tar_target(
+        df_final_raw,
+        pmap(input_list, arrange_final_results) |> reduce(bind_rows)
+    ),
+    tar_target(df_final, join_final_df(df_final_raw, df_populacao, df_snt))
     ## Resultados
 )

@@ -53,3 +53,16 @@ arrange_final_results <- function(
         mutate(variavel = var) |>
         left_join(df_ts, by = "cod_ibge")
 }
+
+set_list_names <- function(list, names) {
+    for (i in 1:length(list)) {
+        names(list[[i]]) <- names
+    }
+    return(list)
+}
+
+join_final_df <- function(df_final_raw, df_pop, df_snt) {
+    df_final_raw |>
+        left_join(df_pop, by = "cod_ibge") |>
+        left_join(df_snt, by = "cod_ibge")
+}
