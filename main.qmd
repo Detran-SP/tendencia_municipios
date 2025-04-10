@@ -1,8 +1,10 @@
 ---
 title: "Análise de Tendência da Sinistralidade em Municípios"
-subtitle: "Nota Técnica 01 - V01"
+subtitle: "Nota Técnica 01 - V02"
 date: last-modified
-author: "Divisão de Estudos para Segurança no Trânsito"
+author: 
+  - "Divisão de Estudos para Segurança no Trânsito"
+  - "Divisão de Estatísticas de Trânsito" 
 format: 
   html:
     lang: pt-BR
@@ -31,35 +33,14 @@ number-sections: true
 #| label: setup
 #| include: false
 
-library(infosiga)
-library(janitor)
-library(tidyverse)
-library(trend)
-library(showtext)
-library(zoo)
-library(gt)
-library(readxl)
-library(geobr)
-library(sf)
-library(leaflet)
-library(plotly)
+library(targets)
 
-source("R/data.R")
-source("R/modelo.R")
-source("R/results.R")
-
-#font_add_google("Open Sans", "opensans")
-#showtext_opts(dpi = 300)
-#showtext_auto()
-
-detran_palette <- list(
-    "blue" = "#005ca8",
-    "lightblue" = "#3490ce",
-    "darkblue" = "#004077",
-    "purple" = "#390077",
-    "lightpurple" = "#D3A1FA"
-)
-
+tar_load(list_gt_tendencia_pos)
+tar_load(list_gt_tendencia_neg)
+tar_load(list_mun_count_pos)
+tar_load(list_mun_count_neg)
+tar_load(tendencia_maps)
+tar_load(gt_resumo)
 ```
 
 ```{css}
@@ -78,141 +59,23 @@ A análise de tendência foi realizada com base no método de Mann-Kendall, que 
 
 ### Tratamento dos dados
 
-O trabalho foi realizado com base nos dados do [Infosiga.SP](https://infosiga.sp.gov.br/), considerando a quantidade de óbitos e sinistros com vítimas feridas. Para a aplicação do método de Mann-Kendall, foram considerados os dados de óbitos entre janeiro de 2015 e fevereiro de 2025 em escala mensal.
+O trabalho foi realizado com base nos dados do [Infosiga.SP](https://infosiga.sp.gov.br/), considerando a quantidade de óbitos e sinistros com vítimas leves a graves. Para a aplicação do método de Mann-Kendall, foram considerados os dados de óbitos entre janeiro de 2015 e fevereiro de 2025 em escala mensal.
 
-Para os dados de sinistros com vítimas feridas, foi considerado o período entre janeiro de 2019 e fevereiro de 2025, também em escala mensal, desconsiderando os sinistros que resultaram em óbitos. Essa escolha se deve à disponibilidade dos dados de sinistros não fatais, considerando que o Infosiga.SP só possui os dados de sinistros fatais no período pré 2019.
+Para os dados de sinistros com feridos leves a graves, foi considerado o período entre janeiro de 2019 e fevereiro de 2025, também em escala mensal, desconsiderando os sinistros que resultaram em óbitos e desconsiderando as ocorrências identificadas como "notificação". A janela temporal foi selecionada considerando que o sistema não possui o registro de sinistros não fatais antes de 2019. As ocorrências classificadas como "notificação" foram desconsideradas pois elas não possuem informações detalhadas sobre as vítimas envolvidas.
 
-Para os óbitos e sinistros com vítimas feridas, buscou-se analisar de forma separada os eventos classificados por tipo de via (Vias municipais, Rodovias) e por modo de transporte da vítima (a pé, bicicleta, motocicleta).
-
-```{r}
-#| label: dados_obitos
-
-list_df_obitos = map2(
-    c("total", "Vias municipais", "Rodovias", "total", "total", "total"),
-    c("total", "total", "total", "Pedestre", "Bicicleta", "Motocicleta"),
-    load_obitos,
-    df_vitimas = infosiga_vitimas,
-    df_sinistros = infosiga_sinistros
-)
-
-df_base = load_municipios("data/divisoes_regionais_esp.csv")
-
-list_df_model_obitos = map(
-    list_df_obitos,
-    create_model_df,
-    df_base = df_base
-)
-
-```
-
-```{r}
-#| label: dados_sinistros_vitimas
-
-list_df_sinistros = map2(
-    c("total", "Vias municipais", "Rodovias", "total", "total", "total"),
-    c("total", "total", "total", "Pedestre", "Bicicleta", "Motocicleta"),
-    load_sinistros_vitimas,
-    df_sinistros = infosiga_sinistros
-)
-
-list_df_model_sinistros = map(
-    list_df_sinistros,
-    create_model_df,
-    df_base = df_base
-)
-```
-
-```{r}
-#| label: dados_populacao
-
-df_populacao = load_populacao("https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2024/POP2024_20241230.xls")
-
-```
-
-```{r}
-#| label: spatial_data
-
-sf_municipios = load_mun_sf()
-```
-
-```{r}
-#| label: integracao_snt
-
-df_snt = load_snt("data/snt_municipios.xlsx")
-```
-
+Para os óbitos e sinistros com vítimas feridas (leves e graves), buscou-se analisar de forma separada os eventos classificados por tipo de via (Vias municipais, Rodovias) e por modo de transporte da vítima (a pé, bicicleta, motocicleta).
 
 ### Teste de Mann-Kendall
 
-O Teste de Mann-Kendall é um método estatístico não paramétrico utilizado para detectar tendências monotônicas em séries temporais. Por não assumir uma distribuição específica dos dados, é especialmente útil em estudos ambientais, hidrológicos e climáticos, onde os dados podem apresentar variabilidade significativa e não seguir distribuições normais [@mann1945; @kendall1975].
+O Teste de Mann-Kendall é um método estatístico não paramétrico^[Um teste não paramétrico é um teste estatístico que não assume que os dados seguem uma distribuição específica, como a normal. Ele é baseado em ordens, sinais ou rankings dos dados, e não nos próprios valores numéricos.] utilizado para detectar tendências monotônicas^[Tendências monotônicas são padrões de comportamento em uma série temporal onde os valores seguem consistentemente uma única direção ao longo do tempo — sempre aumentando ou sempre diminuindo, embora não necessariamente de forma linear ou constante.] em séries temporais. Por não assumir uma distribuição específica dos dados, é especialmente útil em estudos ambientais, hidrológicos e climáticos, onde os dados podem apresentar variabilidade significativa e não seguir distribuições normais [@mann1945; @kendall1975].
 
-O teste avalia se há uma tendência crescente ou decrescente ao longo do tempo, sem exigir que essa tendência seja linear. A estatística de teste é baseada no número de pares ordenados de observações em que os valores posteriores são maiores ou menores que os anteriores. A significância da tendência é avaliada por meio do p-valor associado à estatística de Mann-Kendall, permitindo inferir se a tendência observada é randômica ou não.
+O teste avalia se há uma tendência crescente ou decrescente ao longo do tempo, sem exigir que essa tendência seja linear. A estatística de teste é baseada no número de pares ordenados de observações em que os valores posteriores são maiores ou menores que os anteriores. A significância da tendência é avaliada por meio do $p$-valor associado à estatística de Mann-Kendall, permitindo inferir se a tendência observada é randômica ou não.
 
-Um dos resultados numéricos do teste é o coeficiente Tau, que é uma medida de correlação que expressa a direção e a força da tendência em uma série temporal. Seu valor varia entre -1 e 1, onde valores próximos a 1 indicam uma forte tendência crescente, valores próximos a -1 indicam uma forte tendência decrescente e valores próximos a 0 sugerem ausência de tendência.
-
-
-```{r}
-#| label: mk-test
-
-list_df_model = c(list_df_model_obitos, list_df_model_sinistros)
-
-list_time_series = map(
-    list_df_model,
-    function(x) {
-        map(
-            unique(x$cod_ibge),
-            create_time_series,
-            df = x
-        )
-    }
-)
-
-city_names = unique(list_df_model[[1]]$municipio)
-
-for (i in 1:length(list_time_series)) {
-    names(list_time_series[[i]]) = city_names
-}
-
-list_mk_results = map(
-    list_time_series,
-    function(x) map(x, mk.test)
-)
-
-list_df_mk_results = map2(
-    list_mk_results,
-    list_df_model,
-    arrange_mk_results
-)
-
-input_list = list(
-    list_df_mk_results,
-    list_df_model,
-    list(
-        "Óbitos totais",
-        "Óbitos em vias municipais",
-        "Óbitos em rodovias",
-        "Óbitos - pedestres",
-        "Óbitos - ciclistas",
-        "Óbitos - ocupantes de motocicleta",
-        "Sinistros com vítimas feridas",
-        "Sinistros com vítimas feridas (vias municipais)",
-        "Sinistros com vítimas feridas (rodovias)",
-        "Sinistros com vítimas feridas - pedestres",
-        "Sinistros com vítimas feridas - ciclistas",
-        "Sinistros com vítimas feridas - ocupantes de motocicleta"
-    )
-)
-
-df_final = pmap(input_list, arrange_final_results) |> 
-    reduce(bind_rows) |> 
-    left_join(df_populacao, by = "cod_ibge") |> 
-    left_join(df_snt, by = "cod_ibge")
-
-```
+Um dos resultados numéricos do teste é o coeficiente Tau, que é uma medida de correlação que expressa a direção e a força da tendência em uma série temporal. Seu valor varia entre -1 e 1, onde valores próximos a 1 indicam uma forte tendência crescente, valores próximos a -1 indicam uma forte tendência decrescente e valores próximos a 0 sugerem ausência de tendência. O método não faz análise da grandeza dos valores, assim, o Tau representa apenas da tendência dos valores.
 
 ## Resultados
 
-Os resultados foram organizados entre as análises para os dados de óbitos (@sec-results-obitos), dados dos sinistros (@sec-results-sinistros) e uma tabela-resumo dos municípios (@sec-results-tbl-resumo)
+Os resultados foram organizados entre as análises para os dados de óbitos (@sec-results-obitos), dados dos sinistros com feridos leves e graves (@sec-results-sinistros) e uma tabela-resumo dos municípios (@sec-results-tbl-resumo)
 
 ### Óbitos {#sec-results-obitos}
 
@@ -220,148 +83,150 @@ A @sec-obitos-aumento apresenta os resultados com tendência de aumento, enquant
 
 #### Tendência de aumento {#sec-obitos-aumento}
 
-Entre a @tbl-resultados-aumento-total e a @tbl-resultados-aumento-motociclistas estão apresentados os municípios com tendência de aumento na quantidade de óbitos no trânsito, ordenados pelo valor do Tau. Em resumo, tem-se a seguinte quantidade de municípios com tendência de aumento:
+Entre a @tbl-resultados-aumento-total e a @tbl-resultados-aumento-motociclistas estão apresentados os municípios com tendência de aumento na quantidade de óbitos no trânsito, ordenados pelo valor do Tau. Quanto maior o valor de Tau, maior a intensidade de tendência de aumento.
 
-- **Óbitos totais**: `r extract_df_len(df_final, "Óbitos totais", "pos")` municípios
-- **Óbitos em vias municipais**: `r extract_df_len(df_final, "Óbitos em vias municipais", "pos")` municípios
-- **Óbitos em rodovias**: `r extract_df_len(df_final, "Óbitos em rodovias", "pos")` municípios
-- **Óbitos - pedestres**: `r extract_df_len(df_final, "Óbitos - pedestres", "pos")` municípios
-- **Óbitos - ciclistas**: `r extract_df_len(df_final, "Óbitos - ciclistas", "pos")` municípios
-- **Óbitos - ocupantes de motocicleta**: `r extract_df_len(df_final, "Óbitos - ocupantes de motocicleta", "pos")` municípios
+Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de aumento:
+
+- **Óbitos totais**: `r list_mun_count_pos[[1]]` municípios
+- **Óbitos em vias municipais**: `r list_mun_count_pos[[2]]` municípios
+- **Óbitos em rodovias**: `r list_mun_count_pos[[3]]` municípios
+- **Óbitos - pedestres**: `r list_mun_count_pos[[4]]` municípios
+- **Óbitos - ciclistas**: `r list_mun_count_pos[[5]]` municípios
+- **Óbitos - ocupantes de motocicleta**: `r list_mun_count_pos[[6]]` municípios
 
 ::: {.panel-tabset}
 ## Total
 
 ```{r}
 #| label: tbl-resultados-aumento-total
-#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos
 
-make_tendencia_gt(df_final, "pos", "Óbitos totais")
+list_gt_tendencia_pos[[1]]
 ```
 
 ## Vias municipais
 
 ```{r}
 #| label: tbl-resultados-aumento-municipal
-#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos em vias municipais
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos em vias municipais
 
-make_tendencia_gt(df_final, "pos", "Óbitos em vias municipais")
+list_gt_tendencia_pos[[2]]
 ```
 
 ## Rodovias
 
 ```{r}
 #| label: tbl-resultados-aumento-rodovias
-#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos em rodovias
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos em rodovias
 
-make_tendencia_gt(df_final, "pos", "Óbitos em rodovias")
+list_gt_tendencia_pos[[3]]
 ```
 
 ## Pedestres
 
 ```{r}
 #| label: tbl-resultados-aumento-pedestres
-#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos de pedestres
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos de pedestres
 
-make_tendencia_gt(df_final, "pos", "Óbitos - pedestres")
+list_gt_tendencia_pos[[4]]
 ```
 
 ## Ciclistas
 
 ```{r}
 #| label: tbl-resultados-aumento-ciclistas
-#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos de ciclistas
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos de ciclistas
 
-make_tendencia_gt(df_final, "pos", "Óbitos - ciclistas")
+list_gt_tendencia_pos[[5]]
 ```
 
 ## Ocupantes de motocicleta
 
 ```{r}
 #| label: tbl-resultados-aumento-motociclistas
-#| tbl-cap: Municípios com tendência de aumento na quantidade de óbitos de ocupantes de motocicleta
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos de ocupantes de motocicleta
 
-make_tendencia_gt(df_final, "pos", "Óbitos - ocupantes de motocicleta")
+list_gt_tendencia_pos[[6]]
 ```
 
 :::
 
 #### Tendência de redução {#sec-obitos-reducao}
 
-Entre a @tbl-resultados-reducao-total e a @tbl-resultados-reducao-motociclistas estão apresentados os municípios com tendência de redução na quantidade de óbitos no trânsito, ordenados pelo valor do Tau. Em resumo, tem-se a seguinte quantidade de municípios com tendência de redução:
+Entre a @tbl-resultados-reducao-total e a @tbl-resultados-reducao-motociclistas estão apresentados os municípios com tendência de redução na quantidade de óbitos no trânsito, ordenados pelo valor do Tau. Quanto menor o valor de Tau, maior a intensidade de tendência de redução.
 
-- **Óbitos totais**: `r extract_df_len(df_final, "Óbitos totais", "neg")` municípios
-- **Óbitos em vias municipais**: `r extract_df_len(df_final, "Óbitos em vias municipais", "neg")` municípios
-- **Óbitos em rodovias**: `r extract_df_len(df_final, "Óbitos em rodovias", "neg")` municípios
-- **Óbitos - pedestres**: `r extract_df_len(df_final, "Óbitos - pedestres", "neg")` municípios
-- **Óbitos - ciclistas**: `r extract_df_len(df_final, "Óbitos - ciclistas", "neg")` municípios
-- **Óbitos - ocupantes de motocicleta**: `r extract_df_len(df_final, "Óbitos - ocupantes de motocicleta", "neg")` municípios
+Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de redução:
+
+- **Óbitos totais**: `r list_mun_count_neg[[1]]` municípios
+- **Óbitos em vias municipais**: `r list_mun_count_neg[[2]]` municípios
+- **Óbitos em rodovias**: `r list_mun_count_neg[[3]]` municípios
+- **Óbitos - pedestres**: `r list_mun_count_neg[[4]]` municípios
+- **Óbitos - ciclistas**: `r list_mun_count_neg[[5]]` municípios
+- **Óbitos - ocupantes de motocicleta**: `r list_mun_count_neg[[6]]` municípios
 
 ::: {.panel-tabset}
 ## Total
 
 ```{r}
 #| label: tbl-resultados-reducao-total
-#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos
 
-make_tendencia_gt(df_final, "neg", "Óbitos totais")
+
+list_gt_tendencia_neg[[1]]
 ```
 
 ## Vias municipais
 
 ```{r}
 #| label: tbl-resultados-redução-municipal
-#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos em vias municipais
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos em vias municipais
 
-make_tendencia_gt(df_final, "neg", "Óbitos em vias municipais")
+list_gt_tendencia_neg[[2]]
 ```
 
 ## Rodovias
 
 ```{r}
 #| label: tbl-resultados-redução-rodovias
-#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos em rodovias
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos em rodovias
 
-make_tendencia_gt(df_final, "neg", "Óbitos em rodovias")
+list_gt_tendencia_neg[[3]]
 ```
 
 ## Pedestres
 
 ```{r}
 #| label: tbl-resultados-reducao-pedestres
-#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos de pedestres
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos de pedestres
 
-make_tendencia_gt(df_final, "neg", "Óbitos - pedestres")
+list_gt_tendencia_neg[[4]]
 ```
 
 ## Ciclistas
 
 ```{r}
 #| label: tbl-resultados-reducao-ciclistas
-#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos de ciclistas
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos de ciclistas
 
-make_tendencia_gt(df_final, "neg", "Óbitos - ciclistas")
-
+list_gt_tendencia_neg[[5]]
 ```
 
 ## Ocupantes de motocicleta
 
 ```{r}
 #| label: tbl-resultados-reducao-motociclistas
-#| tbl-cap: Municípios com tendência de redução na quantidade de óbitos de ocupantes de motocicleta
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos de ocupantes de motocicleta
 
-make_tendencia_gt(
-    df_final,
-    "neg",
-    "Óbitos - ocupantes de motocicleta"
-)
+list_gt_tendencia_neg[[6]]
 ```
 
 :::
 
 #### Mapas de tendência {#sec-obitos-mapas}
 
-Os mapas a seguir apresentam a tendência de aumento ou redução na quantidade de óbitos no trânsito nos municípios do estado de São Paulo, considerando também as tendências sem significância estatística.
+Os mapas a seguir apresentam a tendência de aumento ou redução na quantidade de óbitos no trânsito nos municípios do estado de São Paulo, considerando também as tendências sem significância estatística. Os municípios classificados com "tendência de aumento (significativo)" apresentam um valor de Tau acima de 0 e um $p$-valor abaixo de 0,05. Os municípios classificados com "tendência de aumento (não significativo)" apresentam um valor de Tau acima de 0 e um $p$-valor acima de 0,05.
+
+Os municípios classificados com "tendência de redução (significativo)" apresentam um valor de Tau abaixo de 0 e um $p$-valor abaixo de 0,05. Os municípios classificados com "tendência de redução (não significativo)" apresentam um valor de Tau abaixo de 0 e um $p$-valor acima de 0,05.
 
 :::{.panel-tabset}
 
@@ -371,14 +236,7 @@ Os mapas a seguir apresentam a tendência de aumento ou redução na quantidade 
 #| label: fig-mapa-obitos
 #| fig-cap: Mapa da tendência resultante, considerando os óbitos
 
-list_sf = map(
-   input_list[[3]],
-   arrange_mk_sf,
-   df_results = df_final,
-   sf_sp = sf_municipios 
-)
-
-plot_leaflet_map(list_sf[[1]])
+tendencia_maps[[1]]
 ```
 
 ## Vias municipais
@@ -387,7 +245,7 @@ plot_leaflet_map(list_sf[[1]])
 #| label: fig-mapa-obitos-municipal
 #| fig-cap: Mapa da tendência resultante, considerando os óbitos em vias municipais
 
-plot_leaflet_map(list_sf[[2]])
+tendencia_maps[[2]]
 ```
 
 ## Rodovias
@@ -396,7 +254,8 @@ plot_leaflet_map(list_sf[[2]])
 #| label: fig-mapa-obitos-rodovia
 #| fig-cap: Mapa da tendência resultante, considerando os óbitos em rodovias
 
-plot_leaflet_map(list_sf[[3]])
+
+tendencia_maps[[3]]
 ```
 
 ## Pedestres
@@ -405,7 +264,7 @@ plot_leaflet_map(list_sf[[3]])
 #| label: fig-mapa-obitos-pedestres
 #| fig-cap: Mapa da tendência resultante, considerando os óbitos de pedestres
 
-plot_leaflet_map(list_sf[[4]])
+tendencia_maps[[4]]
 ```
 
 ## Ciclistas
@@ -414,8 +273,7 @@ plot_leaflet_map(list_sf[[4]])
 #| label: fig-mapa-obitos-ciclistas
 #| fig-cap: Mapa da tendência resultante, considerando os óbitos de ciclistas
 
-plot_leaflet_map(list_sf[[5]])
-
+tendencia_maps[[5]]
 ```
 
 ## Ocupantes de motocicleta
@@ -424,200 +282,158 @@ plot_leaflet_map(list_sf[[5]])
 #| label: fig-mapa-obitos-motociclistas
 #| fig-cap: Mapa da tendência resultante, considerando os óbitos de ocupantes de motocicleta
 
-plot_leaflet_map(list_sf[[6]])
+tendencia_maps[[6]]
 ```
 
 :::
 
-### Sinistros com Vítimas Feridas {#sec-results-sinistros}
+### Sinistros com Feridos Leves e Graves {#sec-results-sinistros}
 
 #### Tendência de aumento
 
-Entre a @tbl-resultados-aumento-sinistros e a @tbl-resultados-aumento-sinistros-motociclistas estão apresentados os municípios com tendência de aumento na quantidade de sinistros com vítimas, ordenados pelo valor do Tau. Em resumo, tem-se a seguinte quantidade de municípios com tendência de aumento:
+Entre a @tbl-resultados-aumento-sinistros e a @tbl-resultados-aumento-sinistros-motociclistas estão apresentados os municípios com tendência de aumento na quantidade de sinistros com feridos leves e graves, ordenados pelo valor do Tau. Quanto maior o valor de Tau, maior a intensidade de tendência de aumento.
 
-- **Sinistros com vítimas feridas**: `r extract_df_len(df_final, "Sinistros com vítimas feridas", "pos")` municípios
-- **Sinistros com vítimas feridas (vias municipais)**: `r extract_df_len(df_final, "Sinistros com vítimas feridas (vias municipais)", "pos")` municípios
-- **Sinistros com vítimas feridas (rodovias)**: `r extract_df_len(df_final, "Sinistros com vítimas feridas (rodovias)", "pos")` municípios
-- **Sinistros com vítimas feridas - pedestres**: `r extract_df_len(df_final, "Sinistros com vítimas feridas - pedestres", "pos")` municípios
-- **Sinistros com vítimas feridas - ciclistas**: `r extract_df_len(df_final, "Sinistros com vítimas feridas - ciclistas", "pos")` municípios
-- **Sinistros com vítimas feridas - ocupantes de motocicleta**: `r extract_df_len(df_final, "Sinistros com vítimas feridas - ocupantes de motocicleta", "pos")` municípios
+Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de aumento:
+
+- **Sinistros com vítimas feridas (leves e graves)**: `r list_mun_count_pos[[7]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - vias municipais)**: `r list_mun_count_pos[[8]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - rodovias)**: `r list_mun_count_pos[[9]]` municípios
+- **Sinistros com vítimas feridas (leves e graves) - pedestres**: `r list_mun_count_pos[[10]]` municípios
+- **Sinistros com vítimas feridas (leves e graves) - ciclistas**: `r list_mun_count_pos[[11]]` municípios
+- **Sinistros com vítimas feridas (leves e graves) - ocupantes de motocicleta**: `r list_mun_count_pos[[12]]` municípios
 
 ::: {.panel-tabset}
 ## Total
 
 ```{r}
 #| label: tbl-resultados-aumento-sinistros
-#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com vítimas feridas
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves)
 
-make_tendencia_gt(
-    df_final,
-    "pos",
-    "Sinistros com vítimas feridas"
-)
+list_gt_tendencia_pos[[7]]
 ```
 
 ## Vias municipais
 
 ```{r}
 #| label: tbl-resultados-aumento-sinistros-municipais
-#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com vítimas feridas (vias municipais)
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves - vias municipais)
 
-make_tendencia_gt(
-    df_final,
-    "pos",
-    "Sinistros com vítimas feridas (vias municipais)"
-)
+list_gt_tendencia_pos[[8]]
 ```
 
 ## Rodovias
 
 ```{r}
 #| label: tbl-resultados-aumento-sinistros-rodovias
-#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com vítimas feridas (rodovias)
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves - rodovias)
 
-make_tendencia_gt(
-    df_final,
-    "pos",
-    "Sinistros com vítimas feridas (rodovias)"
-)
+list_gt_tendencia_pos[[9]]
 ```
 
 ## Pedestres
 
 ```{r}
 #| label: tbl-resultados-aumento-sinistros-pedestres
-#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com pedestres feridos
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com pedestres feridos (leves e graves)
 
-make_tendencia_gt(
-    df_final,
-    "pos",
-    "Sinistros com vítimas feridas - pedestres"
-)
+list_gt_tendencia_pos[[10]]
 ```
 
 ## Ciclistas
 
 ```{r}
 #| label: tbl-resultados-aumento-sinistros-ciclistas
-#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com ciclistas feridos
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com ciclistas feridos (leves e graves)
 
-make_tendencia_gt(
-    df_final,
-    "pos",
-    "Sinistros com vítimas feridas - ciclistas"
-)
+list_gt_tendencia_pos[[11]]
 ```
 
 ## Ocupantes de motocicleta
 
 ```{r}
 #| label: tbl-resultados-aumento-sinistros-motociclistas
-#| tbl-cap: Municípios com tendência de aumento na quantidade de sinistros com ocupantes de motocicleta feridos
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com ocupantes de motocicleta feridos (leves e graves)
 
-make_tendencia_gt(
-    df_final,
-    "pos",
-    "Sinistros com vítimas feridas - ocupantes de motocicleta"
-)
+list_gt_tendencia_pos[[12]]
 ```
 
 :::
 
 #### Tendência de redução
 
-Entre a @tbl-resultados-reducao-sinistros e a @tbl-resultados-reducao-sinistros-motociclistas estão apresentados os municípios com tendência de redução na quantidade de sinistros com vítimas, ordenados pelo valor do Tau. Em resumo, tem-se a seguinte quantidade de municípios com tendência de redução:
+Entre a @tbl-resultados-reducao-sinistros e a @tbl-resultados-reducao-sinistros-motociclistas estão apresentados os municípios com tendência de redução na quantidade de sinistros com feridos leves e graves, ordenados pelo valor do Tau. Quanto menor o valor de Tau, maior a intensidade de tendência de redução.
 
-- **Sinistros com vítimas feridas**: `r extract_df_len(df_final, "Sinistros com vítimas feridas", "neg")` municípios
-- **Sinistros com vítimas feridas (vias municipais)**: `r extract_df_len(df_final, "Sinistros com vítimas feridas (vias municipais)", "neg")` municípios
-- **Sinistros com vítimas feridas (rodovias)**: `r extract_df_len(df_final, "Sinistros com vítimas feridas (rodovias)", "neg")` municípios
-- **Sinistros com vítimas feridas - pedestres**: `r extract_df_len(df_final, "Sinistros com vítimas feridas - pedestres", "neg")` municípios
-- **Sinistros com vítimas feridas - ciclistas**: `r extract_df_len(df_final, "Sinistros com vítimas feridas - ciclistas", "neg")` municípios
-- **Sinistros com vítimas feridas - ocupantes de motocicleta**: `r extract_df_len(df_final, "Sinistros com vítimas feridas - ocupantes de motocicleta", "neg")` municípios
+Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de redução:
+
+- **Sinistros com vítimas feridas (leves e graves)**: `r list_mun_count_neg[[7]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - vias municipais)**: `r list_mun_count_neg[[8]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - rodovias)**: `r list_mun_count_neg[[9]]` municípios
+- **Sinistros com vítimas feridas - pedestres (leves e graves)**: `r list_mun_count_neg[[10]]` municípios
+- **Sinistros com vítimas feridas - ciclistas (leves e graves)**: `r list_mun_count_neg[[11]]` municípios
+- **Sinistros com vítimas feridas - ocupantes de motocicleta (leves e graves)**: `r list_mun_count_neg[[12]]` municípios
 
 ::: {.panel-tabset}
 ## Total
 
 ```{r}
 #| label: tbl-resultados-reducao-sinistros
-#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves)
 
-make_tendencia_gt(
-    df_final,
-    "neg",
-    "Sinistros com vítimas feridas"
-)
+list_gt_tendencia_neg[[7]]
 ```
 
 ## Vias municipais
 
 ```{r}
 #| label: tbl-resultados-reducao-sinistros-municipais
-#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (vias municipais)
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves - vias municipais)
 
-make_tendencia_gt(
-    df_final,
-    "neg",
-    "Sinistros com vítimas feridas (vias municipais)"
-)
+list_gt_tendencia_neg[[8]]
 ```
 
 ## Rodovias
 
 ```{r}
 #| label: tbl-resultados-reducao-sinistros-rodovias
-#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (rodovias)
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves - rodovias)
 
-make_tendencia_gt(
-    df_final,
-    "neg",
-    "Sinistros com vítimas feridas (rodovias)"
-)
+list_gt_tendencia_neg[[9]]
 ```
 
 ## Pedestres
 
 ```{r}
 #| label: tbl-resultados-reducao-sinistros-pedestres
-#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com pedestres feridos
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com pedestres feridos (leves e graves)
 
-make_tendencia_gt(
-    df_final,
-    "neg",
-    "Sinistros com vítimas feridas - pedestres"
-)
+list_gt_tendencia_neg[[10]]
 ```
 
 ## Ciclistas
 
 ```{r}
 #| label: tbl-resultados-reducao-sinistros-ciclistas
-#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com ciclistas feridos
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com ciclistas feridos (leves e graves)
 
-make_tendencia_gt(
-    df_final,
-    "neg",
-    "Sinistros com vítimas feridas - ciclistas"
-)
+list_gt_tendencia_neg[[11]]
 ```
 
 ## Ocupantes de motocicleta
 
 ```{r}
 #| label: tbl-resultados-reducao-sinistros-motociclistas
-#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com ocupantes de motocicleta feridos
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com ocupantes de motocicleta feridos (leves e graves)
 
-make_tendencia_gt(
-    df_final,
-    "neg",
-    "Sinistros com vítimas feridas - ocupantes de motocicleta"
-)
+list_gt_tendencia_neg[[12]]
 ```
 
 :::
 
 #### Mapas de tendência
 
-Os mapas a seguir apresentam a tendência de aumento ou redução na quantidade de sinistros com vítimas nos municípios do estado de São Paulo, considerando também as tendências sem significância estatística.
+Os mapas a seguir apresentam a tendência de aumento ou redução na quantidade de sinistros com feridos leves e graves no trânsito nos municípios do estado de São Paulo, considerando também as tendências sem significância estatística. Os municípios classificados com "tendência de aumento (significativo)" apresentam um valor de Tau acima de 0 e um $p$-valor abaixo de 0,05. Os municípios classificados com "tendência de aumento (não significativo)" apresentam um valor de Tau acima de 0 e um $p$-valor acima de 0,05.
+
+Os municípios classificados com "tendência de redução (significativo)" apresentam um valor de Tau abaixo de 0 e um $p$-valor abaixo de 0,05. Os municípios classificados com "tendência de redução (não significativo)" apresentam um valor de Tau abaixo de 0 e um $p$-valor acima de 0,05.
 
 ::: {.panel-tabset}
 
@@ -625,77 +441,70 @@ Os mapas a seguir apresentam a tendência de aumento ou redução na quantidade 
 
 ```{r}
 #| label: fig-mapa-sinistros
-#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves)
 
-plot_leaflet_map(list_sf[[7]])
+tendencia_maps[[7]]
 ```
 
 ## Vias municipais
 
 ```{r}
 #| label: fig-mapa-sinistros-municipais
-#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas em vias municipais
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves) em vias municipais
 
-plot_leaflet_map(list_sf[[8]])
+tendencia_maps[[8]]
 ```
 
 ## Rodovias
 
 ```{r}
 #| label: fig-mapa-sinistros-rodovias
-#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas em rodovias
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves) em rodovias
 
-plot_leaflet_map(list_sf[[9]])
+tendencia_maps[[9]]
 ```
 
 ## Pedestres
 ```{r}
 #| label: fig-mapa-sinistros-pedestres
-#| fig-cap: Mapa da tendência resultante, considerando os sinistros com pedestres feridos
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com pedestres feridos (leves e graves)
 
-plot_leaflet_map(list_sf[[10]])
+tendencia_maps[[10]]
 ```
 
 ## Ciclistas
 
 ```{r}
 #| label: fig-mapa-sinistros-ciclistas
-#| fig-cap: Mapa da tendência resultante, considerando os sinistros com ciclistas feridos
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com ciclistas feridos (leves e graves)
 
-plot_leaflet_map(list_sf[[11]])
+tendencia_maps[[11]]
 ```
 
 ## Ocupantes de motocicleta
 ```{r}
 #| label: fig-mapa-sinistros-motociclistas
-#| fig-cap: Mapa da tendência resultante, considerando os sinistros com ocupantes de motocicleta feridos
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com ocupantes de motocicleta feridos (leves e graves)
 
-plot_leaflet_map(list_sf[[12]])
+tendencia_maps[[12]]
 ```
 
 :::
 
 ### Tabela-resumo {#sec-results-tbl-resumo}
 
-A @tbl-final apresenta a lista dos 645 municípios do estado e o indicativo se ele possui alguma tendência de aumento considerando as categorias anteriormente apresentadas.
+A @tbl-final apresenta a lista dos 645 municípios do estado e o indicativo se ele possui alguma tendência significativa de aumento considerando as categorias anteriormente apresentadas.
      
 ```{r}
 #| label: tbl-final
-#| tbl-cap: Municípios com tendência aumento de óbitos e/ou sinistros com vítimas
+#| tbl-cap: Municípios com tendência aumento de óbitos e/ou sinistros com vítimas (leves e graves)
 
-make_gt_resumo(df_final, df_base, df_populacao, df_snt)
+gt_resumo
 
 ```
 
 ## Conclusão
 
-A simples análise de uma série temporal da sinistralidade no município não é suficiente para avaliar a gravidade de seu cenário, ou a tendência dessa gravidade. Os resultados aqui apresentados servem como um ponto de partida para uma análise mais aprofundada, que deve considerar outros fatores, que incluem as características locais dos municípios.
-
-```{r}
-#| label: export_df
-
-export_final_data(df_final, "data/df_final.csv")
-```
-
+A simples análise de uma série temporal da sinistralidade no município não é suficiente para avaliar a gravidade de seu cenário, ou a tendência dessa gravidade. Os resultados aqui apresentados servem como um ponto de partida para uma análise mais aprofundada, que deve considerar outros fatores, podendo incluir as características locais dos municípios.
 
 ## Referências

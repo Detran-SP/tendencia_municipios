@@ -1,4 +1,4 @@
-make_tendencia_gt = function(df, direcao = c("pos", "neg"), var) {
+make_tendencia_gt = function(df, direcao = c("pos", "neg"), var, color_pal) {
     df = df |> pivot_wider(names_from = metric, values_from = value)
 
     if (direcao == "pos") {
@@ -16,6 +16,8 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var) {
         "Período entre 2019 e 2024"
     )
 
+    footnote_plot = "A linha tracejada representa a média da série temporal."
+
     df |>
         filter(p_value < 0.05, variavel == var) |>
         select(nome, populacao_estimada, integrado_snt, tau, ts) |>
@@ -24,8 +26,8 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var) {
             columns = ts,
             reference_line = "mean",
             options = nanoplot_options(
-                data_point_fill_color = detran_palette$darkblue,
-                data_line_stroke_color = detran_palette$darkblue,
+                data_point_fill_color = color_pal$darkblue,
+                data_line_stroke_color = color_pal$darkblue,
                 data_area_fill_color = NULL
             )
         ) |>
@@ -50,11 +52,15 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var) {
         ) |>
         tab_options(table.font.size = "11pt") |>
         cols_align(
-            columns = nanoplots,
-            align = "right"
+            columns = c(integrado_snt, tau, nanoplots),
+            align = "center"
         ) |>
         tab_footnote(
             footnote = footnote_text,
+            locations = cells_column_labels(columns = nanoplots)
+        ) |>
+        tab_footnote(
+            footnote = footnote_plot,
             locations = cells_column_labels(columns = nanoplots)
         ) |>
         opt_interactive(
@@ -86,7 +92,7 @@ arrange_mk_sf = function(sf_sp, df_results, var) {
                 "Tendência de redução"
             ),
             status = paste0(tendencia, " ", significancia),
-            status = if_else(status == "NA NA", "Sem valores", status)
+            status = if_else(status == "NA NA", "Sem tendência", status)
         )
 
     sf_mapa = sf_sp |>
@@ -95,26 +101,26 @@ arrange_mk_sf = function(sf_sp, df_results, var) {
     return(sf_mapa)
 }
 
-plot_leaflet_map = function(sf) {
+plot_leaflet_map = function(sf, color_pal) {
 
-    if ("Sem valores" %in% unique(sf$status)) {
+    if ("Sem tendência" %in% unique(sf$status)) {
         pal = colorFactor(
             palette = c(
                 "grey50",
-                detran_palette$lightpurple,
-                detran_palette$purple,
-                detran_palette$lightblue,
-                detran_palette$blue
+                color_pal$lightpurple,
+                color_pal$purple,
+                color_pal$lightblue,
+                color_pal$blue
             ),
             domain = unique(sf$status)
         )
     } else {
         pal = colorFactor(
             palette = c(
-                detran_palette$lightpurple,
-                detran_palette$purple,
-                detran_palette$lightblue,
-                detran_palette$blue
+                color_pal$lightpurple,
+                color_pal$purple,
+                color_pal$lightblue,
+                color_pal$blue
             ),
             domain = unique(sf$status)
         )
@@ -206,24 +212,6 @@ filter_mun_criticos <- function(df_results) {
         select(nome, aumento)
 }
 
-extract_df_len <- function(df, var, tendencia = c("pos", "neg")) {
-    df = df |>
-        filter(variavel == var) |>
-        pivot_wider(names_from = metric, values_from = value)
-
-    if (tendencia == "pos") {
-        df = df |>
-            filter(tau > 0)
-    } else {
-        df = df |>
-            filter(tau < 0)
-    }
-
-    df |>
-        filter(p_value < 0.05) |>
-        nrow()
-}
-
 make_gt_resumo <- function(df_final, df_base, df_populacao, df_snt) {
     df_tbl = df_final |>
         filter(metric %in% c("p_value", "tau")) |>
@@ -270,6 +258,10 @@ make_gt_resumo <- function(df_final, df_base, df_populacao, df_snt) {
             `Sinistros com vítimas feridas - ciclistas` = "Ciclistas",
             `Sinistros com vítimas feridas - ocupantes de motocicleta` = "Motociclistas"
         ) |>
+        cols_align(
+            columns = integrado_snt:`Sinistros com vítimas feridas - ocupantes de motocicleta`,
+            align = "center"
+        ) |>
         tab_spanner(
             label = "Óbitos",
             columns = `Óbitos totais`:`Óbitos - ocupantes de motocicleta`,
@@ -308,4 +300,23 @@ make_gt_resumo <- function(df_final, df_base, df_populacao, df_snt) {
         ) |>
         tab_options(table.font.size = "11pt")
 }
+
+extract_df_len <- function(df, var, tendencia = c("pos", "neg")) {
+    df = df |>
+        filter(variavel == var) |>
+        pivot_wider(names_from = metric, values_from = value)
+
+    if (tendencia == "pos") {
+        df = df |>
+            filter(tau > 0)
+    } else {
+        df = df |>
+            filter(tau < 0)
+    }
+
+    df |>
+        filter(p_value < 0.05) |>
+        nrow()
+}
+
 

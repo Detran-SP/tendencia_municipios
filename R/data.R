@@ -136,4 +136,6 @@ export_final_data = function(df, path) {
             p_value, tau
         ) |>
         write_csv(path)
+
+    return(path)
 }
