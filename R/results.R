@@ -16,6 +16,8 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var, color_pal) {
         "Período entre 2019 e 2024"
     )
 
+    footnote_plot = "A linha tracejada representa a média da série temporal."
+
     df |>
         filter(p_value < 0.05, variavel == var) |>
         select(nome, populacao_estimada, integrado_snt, tau, ts) |>
@@ -57,6 +59,10 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var, color_pal) {
             footnote = footnote_text,
             locations = cells_column_labels(columns = nanoplots)
         ) |>
+        tab_footnote(
+            footnote = footnote_plot,
+            locations = cells_column_labels(columns = nanoplots)
+        ) |>
         opt_interactive(
             use_pagination = TRUE,
             use_sorting = FALSE,
@@ -86,7 +92,7 @@ arrange_mk_sf = function(sf_sp, df_results, var) {
                 "Tendência de redução"
             ),
             status = paste0(tendencia, " ", significancia),
-            status = if_else(status == "NA NA", "Sem valores", status)
+            status = if_else(status == "NA NA", "Sem tendência", status)
         )
 
     sf_mapa = sf_sp |>
@@ -97,7 +103,7 @@ arrange_mk_sf = function(sf_sp, df_results, var) {
 
 plot_leaflet_map = function(sf, color_pal) {
 
-    if ("Sem valores" %in% unique(sf$status)) {
+    if ("Sem tendência" %in% unique(sf$status)) {
         pal = colorFactor(
             palette = c(
                 "grey50",
