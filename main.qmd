@@ -1,6 +1,6 @@
 ---
 title: "Análise de Tendência da Sinistralidade em Municípios"
-subtitle: "Nota Técnica 01 - V01"
+subtitle: "Nota Técnica 01 - V02"
 date: last-modified
 author: 
   - "Divisão de Estudos para Segurança no Trânsito"

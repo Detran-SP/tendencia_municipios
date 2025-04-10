@@ -52,8 +52,8 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var, color_pal) {
         ) |>
         tab_options(table.font.size = "11pt") |>
         cols_align(
-            columns = nanoplots,
-            align = "right"
+            columns = c(integrado_snt, tau, nanoplots),
+            align = "center"
         ) |>
         tab_footnote(
             footnote = footnote_text,
@@ -257,6 +257,10 @@ make_gt_resumo <- function(df_final, df_base, df_populacao, df_snt) {
             `Sinistros com vítimas feridas - pedestres` = "Pedestres",
             `Sinistros com vítimas feridas - ciclistas` = "Ciclistas",
             `Sinistros com vítimas feridas - ocupantes de motocicleta` = "Motociclistas"
+        ) |>
+        cols_align(
+            columns = integrado_snt:`Sinistros com vítimas feridas - ocupantes de motocicleta`,
+            align = "center"
         ) |>
         tab_spanner(
             label = "Óbitos",
