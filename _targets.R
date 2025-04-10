@@ -1,5 +1,5 @@
 library(targets)
-# library(tarchetypes) # Load other packages as needed.
+library(tarchetypes)
 
 tar_option_set(
     packages = c(
@@ -157,7 +157,26 @@ list(
         tendencia_maps,
         map(list_sf, plot_leaflet_map, color_pal = detran_palette)
     ),
-    tar_target(gt_resumo,
+    tar_target(
+        list_mun_count_pos,
+        map(
+            input_list[[3]],
+            extract_df_len,
+            df = df_final,
+            tendencia = "pos"
+        )
+    ),
+    tar_target(
+        list_mun_count_neg,
+        map(
+            input_list[[3]],
+            extract_df_len,
+            df = df_final,
+            tendencia = "neg"
+        )
+    ),
+    tar_target(
+        gt_resumo,
         make_gt_resumo(
             df_final,
             df_base,
@@ -166,7 +185,12 @@ list(
         )
     ),
     ## Report
+    tar_quarto(report, "main.qmd"),
     ## Export
     tar_target(path_export_csv, "data/df_final.csv", format = "file"),
-    tar_target(df_final_export, export_final_data(df_final, path_export_csv), format = "file")
+    tar_target(
+        df_final_export,
+        export_final_data(df_final, path_export_csv),
+        format = "file"
+    )
 )

@@ -20,8 +20,14 @@ list_df_mk_results|stem|ca1476fe2b254cac|1644e57c80875a0f|dc1fc6f89f37d825|15488
 input_list|stem|da4590823dbcd68f|b112d52acf2a00f8|0474aa08d982d8bf|-1617961909||t20187.8425534342s|s798243b|798243|rds|local|vector|||0||
 df_final_raw|stem|fefd838b13a0e26f|08d4516d0d8c16c8|d3c1f372b93f83ed|1360285925||t20187.8425599157s|s324104b|324104|rds|local|vector|||0.513||
 df_final|stem|68195c04ac15beba|7b42c1fdfdad897f|d6f44536def9c788|1900389646||t20187.8425608416s|s334558b|334558|rds|local|vector|||0.011||
-path_export_csv|stem|0a775a67ee27c88f|86e1e4626fb62859|2c530c1562a7fbd1|134510534|data/df_final.csv|t20187.5647577653s|s782641b|782641|file|local|vector|||0.908||
 detran_palette|stem|b6edc2cb75c29451|8954e30a2191b0e4|2c530c1562a7fbd1|-545819114||t20187.8666992662s|s147b|147|rds|local|vector|||1.204||
+list_gt_tendencia_neg|stem|ce2b9f37ae8aa1e6|26120b1a27e5e2d9|5d60d11f9179065e|152838369||t20187.8676873448s|s2111032b|2111032|rds|local|vector|||4.183||
+df_final_export|stem|0a775a67ee27c88f|84e597ecff59b197|89b43f72275bf85f|-131067547|data/df_final.csv|t20187.8676893124s|s782641b|782641|file|local|vector|||0.159||
+list_sf|stem|f137eee1fe0015c1|dd762748e7ed7301|f57860cd8b0f14f5|708308966||t20187.8676989189s|s16888188b|16888188|rds|local|vector|||0.135||
+list_gt_tendencia_pos|stem|3c4ba0bd59d28a58|7804da80c9d74bd4|5d60d11f9179065e|1953687512||t20187.8678035486s|s2936810b|2936810|rds|local|vector|||8.666||
+gt_resumo|stem|21bb76654513f836|0731f1c3319c0302|cf69ac0e1aef9cf0|-1883774568||t20187.8678056319s|s412576b|412576|rds|local|vector|||0.094||
+tendencia_maps|stem|ae21afabbbe0144d|af9c748e30db87ff|ec176aeeff74b835|-126226107||t20187.8678486875s|s67521330b|67521330|rds|local|vector|||0.989|sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84|
+path_export_csv|stem|0a775a67ee27c88f|86e1e4626fb62859|2c530c1562a7fbd1|134510534|data/df_final.csv|t20187.8676893124s|s782641b|782641|file|local|vector|||0.908||
 filter_mun_criticos|function|aa4ff2cc65645146
 export_final_data|function|3d5f1561014350a1
 join_final_df|function|4229dc3cd7c4a1f6
@@ -31,7 +37,7 @@ create_time_series|function|a96e99d97398a059
 load_sinistros_vitimas|function|95f1b219c2b29737
 make_tendencia_gt|function|ffe54341f7771433
 arrange_final_results|function|a7002f090c9ce1ce
-.Random.seed|object|faffdf73caa08463
+.Random.seed|object|820077e7d6ae4f6f
 set_list_names|function|c1eb7b08e0cd130c
 create_model_df|function|004b1269bc36aead
 make_plotly|function|c695e123baece7d6
@@ -43,9 +49,6 @@ load_municipios|function|acde0f3eac40a58d
 arrange_mk_sf|function|4a2b3cc35ab15d5e
 make_gt_resumo|function|c48277daca3c96e7
 load_snt|function|6c1a88bde32824c8
-list_gt_tendencia_neg|stem|ce2b9f37ae8aa1e6|26120b1a27e5e2d9|5d60d11f9179065e|152838369||t20187.8676873448s|s2111032b|2111032|rds|local|vector|||4.183||
-df_final_export|stem|0a775a67ee27c88f|84e597ecff59b197|89b43f72275bf85f|-131067547|data/df_final.csv|t20187.8676893124s|s782641b|782641|file|local|vector|||0.159||
-list_sf|stem|f137eee1fe0015c1|dd762748e7ed7301|f57860cd8b0f14f5|708308966||t20187.8676989189s|s16888188b|16888188|rds|local|vector|||0.135||
-list_gt_tendencia_pos|stem|3c4ba0bd59d28a58|7804da80c9d74bd4|5d60d11f9179065e|1953687512||t20187.8678035486s|s2936810b|2936810|rds|local|vector|||8.666||
-gt_resumo|stem|21bb76654513f836|0731f1c3319c0302|cf69ac0e1aef9cf0|-1883774568||t20187.8678056319s|s412576b|412576|rds|local|vector|||0.094||
-tendencia_maps|stem|ae21afabbbe0144d|af9c748e30db87ff|ec176aeeff74b835|-126226107||t20187.8678486875s|s67521330b|67521330|rds|local|vector|||0.989|sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84|
+list_mun_count_pos|stem|4b7e4204aadb89a2|249355bd3fd2eb99|f1cc28085669673e|285750243||t20188.717560499s|s85b|85|rds|local|vector|||0.143||
+list_mun_count_neg|stem|30a1dcbbe2df8a13|072a2662ed491d71|f1cc28085669673e|482291579||t20188.7175618879s|s83b|83|rds|local|vector|||0.11||
+report|stem|f7408e5d09f2ea1b|350239e904e8e8f2|f29f9f5a959d17bf|787668912|main_files*main.html*main.qmd|t20188.7181843414s|s62351739b|62351739|file|local|vector|||52.37||
