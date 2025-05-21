@@ -39,7 +39,7 @@ create_time_series|function|a96e99d97398a059
 load_sinistros_vitimas|function|95f1b219c2b29737
 make_tendencia_gt|function|8944c6983bf13428
 arrange_final_results|function|a7002f090c9ce1ce
-.Random.seed|object|19b94cc689d13f2d
+.Random.seed|object|7f8dd0012789103f
 set_list_names|function|c1eb7b08e0cd130c
 create_model_df|function|004b1269bc36aead
 make_plotly|function|c695e123baece7d6
@@ -51,4 +51,4 @@ load_municipios|function|acde0f3eac40a58d
 arrange_mk_sf|function|1fb538c99eeca7a5
 make_gt_resumo|function|b33285274a904c15
 load_snt|function|6c1a88bde32824c8
-report|stem|cede73e0824d04e5|350239e904e8e8f2|b1ea80616bf98752|787668912|main_files*main.html*main.qmd|t20188.8184475019s|s62368498b|62368498|file|local|vector|||46.041||
+report|stem|5aa401f074e725d8|350239e904e8e8f2|b1ea80616bf98752|787668912|main_files*main.html*main.qmd|t20229.7467865583s|s62803126b|62803126|file|local|vector|||49.423||

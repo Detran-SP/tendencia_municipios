@@ -1,6 +1,6 @@
 ---
 title: "Análise de Tendência da Sinistralidade em Municípios"
-subtitle: "Nota Técnica 01 - V02"
+subtitle: "Nota Técnica 01 - v2.0"
 date: last-modified
 author: 
   - "Divisão de Estudos para Segurança no Trânsito"
@@ -15,6 +15,8 @@ format:
     fig-height: 4
     fig-width: 6
     fig-dpi: 300
+    code-links:
+      - repo
 execute: 
   warning: false
   message: false
