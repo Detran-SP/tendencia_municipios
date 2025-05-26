@@ -3,8 +3,18 @@ library(tarchetypes)
 
 tar_option_set(
     packages = c(
-        "infosiga", "janitor", "tidyverse", "trend", "showtext", "zoo", "gt",
-        "readxl", "geobr", "sf", "leaflet", "plotly"
+        "infosiga",
+        "janitor",
+        "tidyverse",
+        "trend",
+        "showtext",
+        "zoo",
+        "gt",
+        "readxl",
+        "geobr",
+        "sf",
+        "leaflet",
+        "plotly"
     )
 )
 
@@ -64,7 +74,9 @@ list(
     ),
     tar_target(
         df_populacao,
-        load_populacao("https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2024/POP2024_20241230.xls")
+        load_populacao(
+            "https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2024/POP2024_20241230.xls"
+        )
     ),
     tar_target(sf_municipios, load_mun_sf()),
     tar_target(path_snt, "data/snt_municipios.xlsx", format = "file"),
@@ -185,7 +197,7 @@ list(
         )
     ),
     ## Report
-    tar_quarto(report, "main.qmd"),
+    tar_quarto(report, "index.qmd"),
     ## Export
     tar_target(path_export_csv, "data/df_final.csv", format = "file"),
     tar_target(

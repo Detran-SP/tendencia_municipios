@@ -102,7 +102,6 @@ arrange_mk_sf = function(sf_sp, df_results, var) {
 }
 
 plot_leaflet_map = function(sf, color_pal) {
-
     if ("Sem tendência" %in% unique(sf$status)) {
         pal = colorFactor(
             palette = c(
@@ -131,12 +130,13 @@ plot_leaflet_map = function(sf, color_pal) {
         sf$nome,
         sf$populacao_estimada,
         sf$status
-    ) |> lapply(htmltools::HTML)
+    ) |>
+        lapply(htmltools::HTML)
 
-    leaflet(sf) |>
+    leaflet(sf, options = leafletOptions(preferCanvas = TRUE)) |>
         addProviderTiles(providers$CartoDB.PositronNoLabels) |>
         addPolygons(
-            fillColor = ~pal(status),
+            fillColor = ~ pal(status),
             stroke = TRUE,
             color = "white",
             fillOpacity = 1,
@@ -164,7 +164,6 @@ plot_leaflet_map = function(sf, color_pal) {
 }
 
 make_plotly <- function(df, mun_input, type = c("obitos", "sinistros")) {
-
     if (type == "obitos") {
         df = df |>
             mutate(
@@ -237,8 +236,11 @@ make_gt_resumo <- function(df_final, df_base, df_populacao, df_snt) {
             )
         ) |>
         select(
-            municipio, populacao_estimada,
-            integrado_snt, everything(), -cod_ibge
+            municipio,
+            populacao_estimada,
+            integrado_snt,
+            everything(),
+            -cod_ibge
         ) |>
         gt() |>
         cols_label(
@@ -318,5 +320,3 @@ extract_df_len <- function(df, var, tendencia = c("pos", "neg")) {
         filter(p_value < 0.05) |>
         nrow()
 }
-
-
