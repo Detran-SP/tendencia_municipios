@@ -76,7 +76,11 @@ wss <- numeric(10)
 for (k in 1:10) {
     set.seed(123)
     wss[k] <- kmeans(
-        df_cluster_results |> select(PC1, PC2),
+        df_cluster_results |>
+            select(
+                tau_obitos_totais,
+                obitos
+            ),
         centers = k,
         nstart = 25
     )$tot.withinss
@@ -85,7 +89,14 @@ for (k in 1:10) {
 plot(1:10, wss, type = "b")
 
 
-km_results <- kmeans(df_cluster_results |> select(PC1, PC2), centers = 4)
+km_results <- kmeans(
+    df_cluster_results |>
+        select(
+            tau_obitos_totais,
+            obitos
+        ),
+    centers = 3
+)
 
 df_cluster_results$cluster <- as.character(km_results$cluster)
 
@@ -124,10 +135,9 @@ p1 <- ggplot(df_cluster_results, aes(x = PC1, y = PC2)) +
     labs(x = "PC1 (59,39%)", y = "PC2 (21,05%)", color = "Cluster:") +
     scale_color_manual(
         values = c(
-            colors$purple,
-            colors$lightpurple,
             colors$blue,
-            colors$lightblue
+            colors$lightblue,
+            colors$lightpurple
         )
     ) +
     theme_detran()
@@ -143,11 +153,9 @@ p2 <- sf_municipios |>
     theme_detran() +
     scale_fill_manual(
         values = c(
-            colors$purple,
-            colors$lightpurple,
             colors$blue,
             colors$lightblue,
-            colors$grey
+            colors$lightpurple
         )
     ) +
     labs(fill = "Cluster")
@@ -162,3 +170,77 @@ interactive_plot <- girafe(
 )
 
 htmltools::save_html(interactive_plot, "plot.html")
+
+
+plot(
+    df_cluster_results |>
+        select(
+            populacao_estimada,
+            tau_obitos_totais,
+            tau_sinistros_com_vitimas_feridas,
+            obitos,
+            sinistros
+        ),
+    col = df_cluster_results$cluster
+)
+
+p1 <- ggplot(df_cluster_results, aes(x = obitos, y = tau_obitos_totais)) +
+    geom_point_interactive(
+        alpha = 0.9,
+        aes(color = cluster, tooltip = nome_id, data_id = nome_id)
+    ) +
+    #coord_fixed() +
+    #geom_text(aes(label = nome)) +
+    #geom_hline(yintercept = 0, lwd = 0.5, lty = "dashed", color = "grey40") +
+    #geom_vline(xintercept = 0, lwd = 0.5, lty = "dashed", color = "grey40") +
+    # geom_segment(
+    #     data = loadings,
+    #     aes(x = 0, y = 0, xend = PC1 * 5, yend = PC2 * 5),
+    #     arrow = arrow(length = unit(0.2, "cm")),
+    #     color = "grey20"
+    # ) +
+    # geom_label_repel(
+    #     data = loadings,
+    #     aes(x = PC1 * 5, y = PC2 * 5, label = var),
+    #     color = "grey20"
+    # ) +
+    #labs(x = "PC1 (59,39%)", y = "PC2 (21,05%)", color = "Cluster:") +
+    scale_color_manual(
+        values = c(
+            colors$blue,
+            colors$lightblue,
+            colors$lightpurple
+        )
+    ) +
+    theme_detran()
+
+p2 <- sf_municipios |>
+    left_join(df_cluster_results, by = "cod_ibge") |>
+    ggplot() +
+    geom_sf_interactive(
+        aes(fill = cluster, tooltip = nome_id, data_id = nome_id),
+        lwd = 0.05,
+        color = "white"
+    ) +
+    theme_detran() +
+    scale_fill_manual(
+        values = c(
+            colors$blue,
+            colors$lightblue,
+            colors$lightpurple
+        )
+    ) +
+    labs(fill = "Cluster")
+
+combined_plot <- p1 + p2
+
+interactive_plot <- girafe(
+    ggobj = combined_plot,
+    width_svg = 16,
+    height_svg = 10,
+    options = list(opts_tooltip(use_fill = TRUE))
+)
+
+htmltools::save_html(interactive_plot, "plot2.html")
+
+# Considerando só p-valor significativo
