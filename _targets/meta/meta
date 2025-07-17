@@ -30,8 +30,7 @@ df_final_export|stem|d6517e2a84b6ef3d|84e597ecff59b197|3eb831f23883a67e|-1310675
 path_export_csv|stem|d6517e2a84b6ef3d|86e1e4626fb62859|2c530c1562a7fbd1|134510534|data/df_final.csv|t20286.7024217306s|s700921b|700921|file|local|vector|||0.745||
 list_sf|stem|5a8a4a7ad68828f5|fa98319c3c282bc5|8a2e3dde3abb586f|708308966||t20286.7052034429s|s16894807b|16894807|rds|local|vector|||0.213||
 detran_palette|stem|d19105c0397c5fd7|8d410db3a163ec0f|2c530c1562a7fbd1|-545819114||t20286.8715597107s|s150b|150|rds|local|vector|||1.142||
-list_gt_tendencia_pos|stem|75b8a9daba462ce0|43698626547394ee|241653a1db8098bc|1953687512||t20286.8717138773s|s2898467b|2898467|rds|local|vector|||12.692||
-list_gt_tendencia_neg|stem|398d64dd0560d556|6da3b53dde5af724|241653a1db8098bc|152838369||t20286.8718057754s|s2019976b|2019976|rds|local|vector|||7.547||
+tendencia_maps|stem|8c585a2b4df76fcb|af9c748e30db87ff|5cc8feec470f2cc6|-126226107||t20286.884383666s|s67524377b|67524377|rds|local|vector|||1.222|sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'|
 filter_mun_criticos|function|aa4ff2cc65645146
 export_final_data|function|e1c804ad80575b13
 join_final_df|function|4229dc3cd7c4a1f6
@@ -39,13 +38,13 @@ extract_df_len|function|1c2e420a2c0629f8
 arrange_mk_results|function|5eeeb99da241b0ca
 create_time_series|function|a96e99d97398a059
 load_sinistros_vitimas|function|86538d03f920a944
-make_tendencia_gt|function|5a9d0b3184914f15
+make_tendencia_gt|function|c5ed3010a79ca062
 arrange_final_results|function|a7002f090c9ce1ce
-.Random.seed|object|b161c95330d96acc
+.Random.seed|object|4086bd828c88b344
 set_list_names|function|18a2cc9a0e0a7293
 create_model_df|function|004b1269bc36aead
 make_plotly|function|c695e123baece7d6
-plot_leaflet_map|function|bddcd0d1dd0c1ce3
+plot_leaflet_map|function|2377da6d839dcb57
 load_populacao|function|0e882ea8ed62a649
 load_obitos|function|fdc7db44c5e387cd
 load_mun_sf|function|a25fdfd5520952e1
@@ -54,5 +53,6 @@ load_municipios|function|acde0f3eac40a58d
 arrange_mk_sf|function|b2360a2cf1077183
 make_gt_resumo|function|f1ad499d07377819
 load_snt|function|6c1a88bde32824c8
-tendencia_maps|stem|7476ae78abc32e44|af9c748e30db87ff|6d1fe9457987e60c|-126226107||t20286.8759121401s|s67524358b|67524358|rds|local|vector|||1.084|sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84. sf layer has inconsistent datum projlonglat ellpsGRS80 towgs840,0,0,0,0,0,0 no_defs.Need projlonglat datumWGS84|
-report|stem|7830349c64d70d70|aa37f050d2efd058|102069609227c672|787668912|index.html*index.qmd|t20234.7544545434s||24020833|file|local|vector|||67.411|| Error running quarto cli.ℹ Rerun with quiet  FALSE to see the full error message.Caused by error System command quarto failed
+list_gt_tendencia_pos|stem|03165d07c927bff3|43698626547394ee|65987e7bc9587278|1953687512||t20286.8924492892s|s2899695b|2899695|rds|local|vector|||10.656||
+list_gt_tendencia_neg|stem|7901cc22c652313e|6da3b53dde5af724|65987e7bc9587278|152838369||t20286.8925095901s|s2021269b|2021269|rds|local|vector|||4.556||
+report|stem|7830349c64d70d70|aa37f050d2efd058|b52f5b2a89a642a9|787668912|index.html*index.qmd|t20234.7544545434s||24020833|file|local|vector|||72.043||✖ Error running quarto cli. ℹ Rerun with `quiet = FALSE` to see the full error message. Caused by error: ! System command 'quarto' failed

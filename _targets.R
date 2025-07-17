@@ -212,7 +212,7 @@ list(
         )
     ),
     ## Report
-    tar_quarto(report, "index.qmd"),
+    #tar_quarto(report, "index.qmd"),
     ## Export
     tar_target(path_export_csv, "data/df_final.csv", format = "file"),
     tar_target(

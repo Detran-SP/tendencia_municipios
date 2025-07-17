@@ -41,7 +41,7 @@ make_tendencia_gt = function(
         cols_label(
             municipio = "Município",
             populacao_estimada = "População",
-            tau = "Tau",
+            tau = "Índice de tendência (Tau)",
             #integrado_snt = "Integrado ao SNT",
             nanoplots = "Série temporal anual"
         ) |>
