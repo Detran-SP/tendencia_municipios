@@ -1,8 +1,12 @@
 ---
-title: "Análise de Tendência da Sinistralidade em Municípios"
-subtitle: "Nota Técnica 01 - v2.0"
-date: last-modified
+title: "Análise de Tendência da Sinistralidade em Municípios do Estado de São Paulo"
+subtitle: "Nota Técnica 01"
+date: 2025-07-23
 author: 
+  - "Departamento Estadual de Trânsito de São Paulo (Detran-SP)"
+  - "Diretoria de Segurança Viária"
+  - "Coordenadoria Geral de Segurança Viária"
+  - "Coordenadoria do Observatório de Segurança no Trânsito"
   - "Divisão de Estudos para Segurança no Trânsito"
   - "Divisão de Estatísticas de Trânsito" 
 format: 
@@ -23,11 +27,11 @@ execute:
   message: false
   echo: false
   freeze: auto
+  knitr:
+    opts_knit:
+      fig.showtext: true
 editor_options: 
   chunk_output_type: console
-knitr:
-  opts_knit:
-    fig.showtext: true
 bibliography: refs.bib
 number-sections: true
 ---

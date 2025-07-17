@@ -30,21 +30,29 @@ list(
             "blue" = "#005ca8",
             "lightblue" = "#3490ce",
             "darkblue" = "#004077",
-            "purple" = "#390077",
+            "purple" = "#B456E0",
             "lightpurple" = "#D3A1FA"
         )
     ),
     ## Dados
     tar_target(
         input_tipo_via,
-        c("total", "Vias urbanas", "Estradas e rodovias", "total", "total", "total")
+        c(
+            "total",
+            "Vias urbanas",
+            "Estradas e rodovias",
+            "total",
+            "total",
+            "total"
+        )
     ),
     tar_target(
         input_tipo_modo,
         c("total", "total", "total", "A pé", "Bicicleta", "Motocicleta")
     ),
     tar_target(
-        infosiga_vitimas, get_infosiga_data("pessoas")
+        infosiga_vitimas,
+        get_infosiga_data("pessoas")
     ),
     tar_target(infosiga_sinistros, get_infosiga_data('sinistros')),
     tar_target(
@@ -120,14 +128,14 @@ list(
             list_df_model,
             list(
                 "Óbitos totais",
-                "Óbitos em vias municipais",
-                "Óbitos em rodovias",
+                "Óbitos em vias urbanas",
+                "Óbitos em estadas e rodovias",
                 "Óbitos - pedestres",
                 "Óbitos - ciclistas",
                 "Óbitos - ocupantes de motocicleta",
                 "Sinistros com vítimas feridas",
-                "Sinistros com vítimas feridas (vias municipais)",
-                "Sinistros com vítimas feridas (rodovias)",
+                "Sinistros com vítimas feridas (vias urbanas)",
+                "Sinistros com vítimas feridas (estradas e rodovias)",
                 "Sinistros com vítimas feridas - pedestres",
                 "Sinistros com vítimas feridas - ciclistas",
                 "Sinistros com vítimas feridas - ocupantes de motocicleta"
@@ -147,7 +155,8 @@ list(
             make_tendencia_gt,
             df = df_final,
             direcao = "pos",
-            color_pal = detran_palette
+            color_pal = detran_palette,
+            df_base = df_base
         )
     ),
     tar_target(
@@ -157,7 +166,8 @@ list(
             make_tendencia_gt,
             df = df_final,
             direcao = "neg",
-            color_pal = detran_palette
+            color_pal = detran_palette,
+            df_base = df_base
         )
     ),
     tar_target(
@@ -166,7 +176,8 @@ list(
             input_list[[3]],
             arrange_mk_sf,
             df_results = df_final,
-            sf_sp = sf_municipios
+            sf_sp = sf_municipios,
+            df_base = df_base
         )
     ),
     tar_target(

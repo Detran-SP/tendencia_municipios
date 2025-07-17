@@ -1,4 +1,10 @@
-make_tendencia_gt = function(df, direcao = c("pos", "neg"), var, color_pal) {
+make_tendencia_gt = function(
+    df,
+    direcao = c("pos", "neg"),
+    var,
+    color_pal,
+    df_base
+) {
     df = df |> pivot_wider(names_from = metric, values_from = value)
 
     if (direcao == "pos") {
@@ -20,7 +26,8 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var, color_pal) {
 
     df |>
         filter(p_value < 0.05, variavel == var) |>
-        select(nome, populacao_estimada, integrado_snt, tau, ts) |>
+        left_join(df_base, by = "cod_ibge") |>
+        select(municipio, populacao_estimada, tau, ts) |>
         gt() |>
         cols_nanoplot(
             columns = ts,
@@ -32,10 +39,10 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var, color_pal) {
             )
         ) |>
         cols_label(
-            nome = "Município",
+            municipio = "Município",
             populacao_estimada = "População",
             tau = "Tau",
-            integrado_snt = "Integrado ao SNT",
+            #integrado_snt = "Integrado ao SNT",
             nanoplots = "Série temporal anual"
         ) |>
         fmt_number(
@@ -52,7 +59,7 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var, color_pal) {
         ) |>
         tab_options(table.font.size = "11pt") |>
         cols_align(
-            columns = c(integrado_snt, tau, nanoplots),
+            columns = c(tau, nanoplots),
             align = "center"
         ) |>
         tab_footnote(
@@ -73,7 +80,7 @@ make_tendencia_gt = function(df, direcao = c("pos", "neg"), var, color_pal) {
         )
 }
 
-arrange_mk_sf = function(sf_sp, df_results, var) {
+arrange_mk_sf = function(sf_sp, df_results, var, df_base) {
     df = df_results |>
         filter(metric %in% c("p_value", "tau"), variavel == var) |>
         pivot_wider(
@@ -96,38 +103,63 @@ arrange_mk_sf = function(sf_sp, df_results, var) {
         )
 
     sf_mapa = sf_sp |>
-        left_join(df, by = "cod_ibge")
+        left_join(df, by = "cod_ibge") |>
+        left_join(df_base, by = "cod_ibge")
 
     return(sf_mapa)
 }
 
 plot_leaflet_map = function(sf, color_pal) {
-    if ("Sem tendência" %in% unique(sf$status)) {
-        pal = colorFactor(
-            palette = c(
-                "grey50",
-                color_pal$lightpurple,
-                color_pal$purple,
-                color_pal$lightblue,
-                color_pal$blue
-            ),
-            domain = unique(sf$status)
+    sf = sf |>
+        mutate(
+            status = case_match(
+                status,
+                "Tendência de aumento (Significativa)" ~ "Tendência de aumento",
+                "Tendência de redução (Significativa)" ~ "Tendência de redução",
+                "Tendência de aumento (Não significativa)" ~
+                    "Sem tendência significativa",
+                "Tendência de redução (Não significativa)" ~
+                    "Sem tendência significativa",
+                "Sem tendência" ~ "Sem tendência significativa",
+                .default = status
+            )
         )
-    } else {
-        pal = colorFactor(
-            palette = c(
-                color_pal$lightpurple,
-                color_pal$purple,
-                color_pal$lightblue,
-                color_pal$blue
-            ),
-            domain = unique(sf$status)
-        )
-    }
+
+    # if ("Sem tendência" %in% unique(sf$status)) {
+    #     pal = colorFactor(
+    #         palette = c(
+    #             "grey50",
+    #             #color_pal$lightpurple,
+    #             color_pal$purple,
+    #             #color_pal$lightblue,
+    #             color_pal$blue
+    #         ),
+    #         domain = unique(sf$status)
+    #     )
+    # } else {
+    #     pal = colorFactor(
+    #         palette = c(
+    #             #color_pal$lightpurple,
+    #             color_pal$purple,
+    #             #color_pal$lightblue,
+    #             color_pal$blue
+    #         ),
+    #         domain = unique(sf$status)
+    #     )
+    # }
+
+    pal = colorFactor(
+        palette = c(
+            "grey70",
+            color_pal$purple,
+            color_pal$blue
+        ),
+        domain = unique(sf$status)
+    )
 
     labels = sprintf(
         "<strong>%s</strong><br/>População: %d<br/>%s",
-        sf$nome,
+        sf$municipio,
         sf$populacao_estimada,
         sf$status
     ) |>
@@ -152,7 +184,7 @@ plot_leaflet_map = function(sf, color_pal) {
                 weight = 3,
                 bringToFront = TRUE
             ),
-            layerId = ~nome
+            layerId = ~municipio
         ) |>
         addLegend(
             pal = pal,
@@ -248,14 +280,14 @@ make_gt_resumo <- function(df_final, df_base, df_populacao, df_snt) {
             populacao_estimada = "População",
             integrado_snt = "Integrado ao SNT",
             `Óbitos totais` = "Total",
-            `Óbitos em vias municipais` = "Vias municipais",
-            `Óbitos em rodovias` = "Rodovias",
+            `Óbitos em vias urbanas` = "Vias urbanas",
+            `Óbitos em estadas e rodovias` = "Estradas e rodovias",
             `Óbitos - pedestres` = "Pedestres",
             `Óbitos - ciclistas` = "Ciclistas",
             `Óbitos - ocupantes de motocicleta` = "Motociclistas",
             `Sinistros com vítimas feridas` = "Total",
-            `Sinistros com vítimas feridas (vias municipais)` = "Vias municipais",
-            `Sinistros com vítimas feridas (rodovias)` = "Rodovias",
+            `Sinistros com vítimas feridas (vias urbanas)` = "Vias urbanas",
+            `Sinistros com vítimas feridas (estradas e rodovias)` = "Estradas e rodovias",
             `Sinistros com vítimas feridas - pedestres` = "Pedestres",
             `Sinistros com vítimas feridas - ciclistas` = "Ciclistas",
             `Sinistros com vítimas feridas - ocupantes de motocicleta` = "Motociclistas"

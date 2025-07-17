@@ -5,7 +5,7 @@ load_obitos <- function(
     modo = "total"
 ) {
     df = df_vitimas |>
-        filter(gravidade_lesao == "Fatal") |>
+        filter(gravidade_lesao == "Fatal", data_obito <= "2025-02-28") |>
         mutate(
             ano_mes = format(data_obito, "%Y-%m"),
             ano_mes = ym(ano_mes)
@@ -77,7 +77,8 @@ load_sinistros_vitimas <- function(
     df_sinistros_vitimas = df_sinistros |>
         filter(
             gravidade_fatal == 0 | gravidade_leve > 0 | gravidade_grave > 0,
-            year(data_sinistro) > 2018
+            year(data_sinistro) > 2018,
+            data_sinistro <= "2025-02-28"
         ) |>
         mutate(
             ano_mes = format(data_sinistro, "%Y-%m"),
@@ -137,7 +138,7 @@ export_final_data = function(df, path) {
         pivot_wider(names_from = metric, values_from = value) |>
         select(
             cod_ibge,
-            nome,
+            # municipio,
             variavel,
             populacao_estimada,
             integrado_snt,
