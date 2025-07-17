@@ -3,7 +3,6 @@ library(tarchetypes)
 
 tar_option_set(
     packages = c(
-        "infosiga",
         "janitor",
         "tidyverse",
         "trend",
@@ -14,7 +13,8 @@ tar_option_set(
         "geobr",
         "sf",
         "leaflet",
-        "plotly"
+        "plotly",
+        'ost.utils'
     )
 )
 
@@ -37,12 +37,16 @@ list(
     ## Dados
     tar_target(
         input_tipo_via,
-        c("total", "Vias municipais", "Rodovias", "total", "total", "total")
+        c("total", "Vias urbanas", "Estradas e rodovias", "total", "total", "total")
     ),
     tar_target(
         input_tipo_modo,
-        c("total", "total", "total", "Pedestre", "Bicicleta", "Motocicleta")
+        c("total", "total", "total", "A pé", "Bicicleta", "Motocicleta")
     ),
+    tar_target(
+        infosiga_vitimas, get_infosiga_data("pessoas")
+    ),
+    tar_target(infosiga_sinistros, get_infosiga_data('sinistros')),
     tar_target(
         list_df_obitos,
         map2(

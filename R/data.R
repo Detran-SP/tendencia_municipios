@@ -84,8 +84,12 @@ load_sinistros_vitimas <- function(
             ano_mes = ym(ano_mes)
         ) |>
         select(
-            cod_ibge, ano_mes, tp_veiculo_bicicleta, tipo_via,
-            tp_veiculo_motocicleta, tp_sinistro_atropelamento
+            cod_ibge,
+            ano_mes,
+            tp_veiculo_bicicleta,
+            tipo_via,
+            tp_veiculo_motocicleta,
+            tp_sinistro_atropelamento
         )
 
     if (via != "total") {
@@ -132,10 +136,29 @@ export_final_data = function(df, path) {
     df |>
         pivot_wider(names_from = metric, values_from = value) |>
         select(
-            cod_ibge, nome, variavel, populacao_estimada, integrado_snt,
-            p_value, tau
+            cod_ibge,
+            nome,
+            variavel,
+            populacao_estimada,
+            integrado_snt,
+            p_value,
+            tau
         ) |>
         write_csv(path)
 
     return(path)
+}
+
+get_infosiga_data <- function(type) {
+    temp <- tempdir()
+    download_infosiga(temp)
+    df <- load_infosiga(type, temp) |>
+        clean_infosiga(type)
+
+    if (type == "sinistros") {
+        df <- df |> filter(tipo_registro != "Notificação")
+    }
+
+    on.exit(unlink(temp))
+    return(df)
 }

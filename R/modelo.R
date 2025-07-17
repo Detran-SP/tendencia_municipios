@@ -54,9 +54,9 @@ arrange_final_results <- function(
         left_join(df_ts, by = "cod_ibge")
 }
 
-set_list_names <- function(list, names) {
+set_list_names <- function(list, city_names) {
     for (i in 1:length(list)) {
-        names(list[[i]]) <- names
+        setNames(list[[i]], city_names)
     }
     return(list)
 }
