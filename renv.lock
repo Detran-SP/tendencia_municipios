@@ -1112,6 +1112,21 @@
       ],
       "Hash": "ca012d4a706e21ce217ba15f22d402b2"
     },
+    "leaflet.extras": {
+      "Package": "leaflet.extras",
+      "Version": "2.0.1",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "htmltools",
+        "htmlwidgets",
+        "leaflet",
+        "magrittr",
+        "stringr"
+      ],
+      "Hash": "1626fb22ec9e788f66c1d08fd863da4c"
+    },
     "leaflet.providers": {
       "Package": "leaflet.providers",
       "Version": "2.0.0",
@@ -1913,7 +1928,7 @@
     },
     "targets": {
       "Package": "targets",
-      "Version": "1.10.1",
+      "Version": "1.11.3",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
@@ -1926,6 +1941,7 @@
         "data.table",
         "igraph",
         "knitr",
+        "prettyunits",
         "ps",
         "rlang",
         "secretbase",
@@ -1937,7 +1953,7 @@
         "vctrs",
         "yaml"
       ],
-      "Hash": "2063e268fc5d602e1bcbd094cd124c65"
+      "Hash": "19f79f73e18a4bd63c668080faae39d1"
     },
     "terra": {
       "Package": "terra",

@@ -192,7 +192,8 @@ plot_leaflet_map = function(sf, color_pal) {
             position = "bottomleft",
             opacity = 1,
             title = "Tendência calculada:"
-        )
+        ) |>
+        leaflet.extras::addFullscreenControl()
 }
 
 make_plotly <- function(df, mun_input, type = c("obitos", "sinistros")) {

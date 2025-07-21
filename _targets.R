@@ -14,7 +14,8 @@ tar_option_set(
         "sf",
         "leaflet",
         "plotly",
-        'ost.utils'
+        'ost.utils',
+        "leaflet.extras"
     )
 )
 

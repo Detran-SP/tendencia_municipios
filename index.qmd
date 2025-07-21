@@ -58,27 +58,31 @@ div.leaflet-control {
 
 ## Introdução
 
-O objetivo dessa nota técnica é apresentar uma análise de tendência da sinistralidade no trânsito em municípios do estado de São Paulo, com base em dados do Infosiga.SP. A análise se concentra em identificar tendências de aumento ou redução na quantidade de óbitos e sinistros com vítimas feridas, considerando diferentes tipos de vias e modos de transporte.
+A gestão da mobilidade segura tem como um de seus principais pilares o monitoramento do desempenho da segurança viária, através do acompanhamento de intervenções e de indicadores quantitativos, que podem envolver a quantidade de sinistros e de óbitos no trânsito. O monitoramento do desempenho da segurança viária necessita de métodos que possibilitam a identificação precisa dos locais com cenários de agravamento ou melhoria, principalmente em escalas geográficas mais precisas, como os municípios.
 
-A análise de tendência foi realizada com base no método de Mann-Kendall, que é amplamente utilizado para detectar tendências em séries temporais. Observa-se que a tendência analisada nesse trabalho é apenas um norte para diagnosticar a situação da segurança viária de um município. A análise de tendência não deve ser utilizada como um indicador isolado, mas sim como parte de uma avaliação mais abrangente que considere outros fatores relevantes.
+Nesse contexto, o objetivo dessa trabalho é apresentar uma análise de tendência da sinistralidade no trânsito em municípios do estado de São Paulo, com base em dados do Infosiga.SP. A análise se concentra em identificar tendências de aumento ou redução na quantidade de óbitos e sinistros com vítimas feridas, considerando diferentes tipos de vias e modos de transporte.
+
+Trabalhos prévios avançaram na questão da análise de séries temporais de óbitos e sinistros, como @dereticSARIMAModellingApproach2022 que investigaram a série temporal mensal de sinistros entre 2016 e 2019 na Cidade de Belgrado, Sérvia, identificando um componente de sazonalidade. Indo além, @krickovicSpatialtemporalTrendAnalysis2024 analisaram a tendência dos sinistros de trânsito e os padrões espaciais em uma região do norte da Sérvia, desagregando a amostra em 45 municípios. 
+
+Para o presente estudo, a análise de tendência foi realizada com base no teste de Mann-Kendall, que é amplamente utilizado para detectar tendências em séries temporais. Observa-se que a tendência analisada nesse trabalho é apenas um norte para diagnosticar a situação da segurança viária de um município. A análise de tendência não deve ser utilizada como um indicador isolado, mas sim como parte de uma avaliação mais abrangente que considere outros fatores relevantes.
 
 ## Metodologia
 
 ### Tratamento dos dados
 
-O trabalho foi realizado com base nos dados do [Infosiga.SP](https://infosiga.sp.gov.br/), considerando a quantidade de óbitos e sinistros com vítimas leves a graves. Para a aplicação do método de Mann-Kendall, foram considerados os dados de óbitos entre janeiro de 2015 e fevereiro de 2025 em escala mensal.
+O trabalho foi realizado com base nos dados abertos do Sistema de Informações Gerenciais de Sinistros de Trânsito do Estado de São Paulo - Infosiga.SP [@detran-spSistemaInformacoesGerenciais2025], considerando a quantidade de óbitos e sinistros com vítimas leves a graves. Para a aplicação do método de Mann-Kendall, foram considerados os dados de óbitos entre janeiro de 2015 e fevereiro de 2025 em escala mensal.
 
-Para os dados de sinistros com feridos leves a graves, foi considerado o período entre janeiro de 2019 e fevereiro de 2025, também em escala mensal, desconsiderando os sinistros que resultaram em óbitos e desconsiderando as ocorrências identificadas como "notificação". A janela temporal foi selecionada considerando que o sistema não possui o registro de sinistros não fatais antes de 2019. As ocorrências classificadas como "notificação" foram desconsideradas pois elas não possuem informações detalhadas sobre as vítimas envolvidas.
+Para os dados de sinistros com feridos leves a graves, foi considerado o período entre janeiro de 2019 e fevereiro de 2025, também em escala mensal, desconsiderando os sinistros que resultaram em óbitos e desconsiderando as ocorrências identificadas como "notificação". A janela temporal foi selecionada considerando que o sistema não possui o registro de sinistros não fatais antes de 2019.
 
-Para os óbitos e sinistros com vítimas feridas (leves e graves), buscou-se analisar de forma separada os eventos classificados por tipo de via (Vias municipais, Rodovias) e por modo de transporte da vítima (a pé, bicicleta, motocicleta).
+Para os óbitos e sinistros com vítimas feridas (leves e graves), buscou-se analisar de forma separada os eventos classificados por tipo de via (Vias urbanas, Estadas e rodovias) e por modo de transporte da vítima (a pé, bicicleta, motocicleta). Para o período dos óbitos, considerou-se o atributo `data_obito`, e para o filtro do período do sinistro foi considerado o atributo `data_sinistro`, com filtro para as ocorrências registradas como `SINISTRO NAO FATAL`. Com a chave `municipio`, os dados foram agrupados de acordo com os 645 municípios do estado e pelo mês/ano registrado. Com isso, foram criadas 645 séries temporais mensais para cada um dos objetos em análise. Todo o processo foi desenvolvido com o auxílio da linguagem de programação R [@rcoreteam2021].
 
 ### Teste de Mann-Kendall
 
-O Teste de Mann-Kendall é um método estatístico não paramétrico^[Um teste não paramétrico é um teste estatístico que não assume que os dados seguem uma distribuição específica, como a normal. Ele é baseado em ordens, sinais ou rankings dos dados, e não nos próprios valores numéricos.] utilizado para detectar tendências monotônicas^[Tendências monotônicas são padrões de comportamento em uma série temporal onde os valores seguem consistentemente uma única direção ao longo do tempo — sempre aumentando ou sempre diminuindo, embora não necessariamente de forma linear ou constante.] em séries temporais. Por não assumir uma distribuição específica dos dados, é especialmente útil em estudos ambientais, hidrológicos e climáticos, onde os dados podem apresentar variabilidade significativa e não seguir distribuições normais [@mann1945; @kendall1975].
+O Teste de Mann-Kendall (MK) é um método estatístico não paramétrico^[Um teste não paramétrico é um teste estatístico que não assume que os dados seguem uma distribuição específica, como a normal. Ele é baseado em ordens, sinais ou rankings dos dados, e não nos próprios valores numéricos.] utilizado para detectar tendências monotônicas^[Tendências monotônicas são padrões de comportamento em uma série temporal onde os valores seguem consistentemente uma única direção ao longo do tempo — sempre aumentando ou sempre diminuindo, embora não necessariamente de forma linear ou constante.] em séries temporais. Por não assumir uma distribuição específica dos dados, é especialmente útil em estudos ambientais, hidrológicos e climáticos, onde os dados podem apresentar variabilidade significativa e não seguir distribuições normais [@mannNonparametricTestsTrend1945; @kendallRankCorrelationMethods1975].
 
 O teste avalia se há uma tendência crescente ou decrescente ao longo do tempo, sem exigir que essa tendência seja linear. A estatística de teste é baseada no número de pares ordenados de observações em que os valores posteriores são maiores ou menores que os anteriores. A significância da tendência é avaliada por meio do $p$-valor associado à estatística de Mann-Kendall, permitindo inferir se a tendência observada é randômica ou não.
 
-Um dos resultados numéricos do teste é o coeficiente Tau, que é uma medida de correlação que expressa a direção e a força da tendência em uma série temporal. Seu valor varia entre -1 e 1, onde valores próximos a 1 indicam uma forte tendência crescente, valores próximos a -1 indicam uma forte tendência decrescente e valores próximos a 0 sugerem ausência de tendência. O método não faz análise da grandeza dos valores, assim, o Tau representa apenas da tendência dos valores.
+Um dos resultados numéricos do teste é o coeficiente Tau, que é uma medida de correlação que expressa a direção e a força da tendência em uma série temporal. Seu valor varia entre -1 e 1, onde valores próximos a 1 indicam uma forte tendência crescente, valores próximos a -1 indicam uma forte tendência decrescente e valores próximos a 0 sugerem ausência de tendência. O método não faz análise da grandeza dos valores, assim, o Tau representa apenas da tendência dos valores. Para o presente trabalho, o MK foi aplicado com auxílio da biblioteca {trend} da linguagem R [@pohlertTrendNonParametricTrend2015].
 
 ## Resultados
 
@@ -95,8 +99,8 @@ Entre a @tbl-resultados-aumento-total e a @tbl-resultados-aumento-motociclistas 
 Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de aumento:
 
 - **Óbitos totais**: `r list_mun_count_pos[[1]]` municípios
-- **Óbitos em vias municipais**: `r list_mun_count_pos[[2]]` municípios
-- **Óbitos em rodovias**: `r list_mun_count_pos[[3]]` municípios
+- **Óbitos em vias urbanas**: `r list_mun_count_pos[[2]]` municípios
+- **Óbitos em estadas e rodovias**: `r list_mun_count_pos[[3]]` municípios
 - **Óbitos - pedestres**: `r list_mun_count_pos[[4]]` municípios
 - **Óbitos - ciclistas**: `r list_mun_count_pos[[5]]` municípios
 - **Óbitos - ocupantes de motocicleta**: `r list_mun_count_pos[[6]]` municípios
@@ -111,20 +115,20 @@ Nessas tabelas, foram considerados apenas os municípios com resultados estatist
 list_gt_tendencia_pos[[1]]
 ```
 
-## Vias municipais
+## Vias urbanas
 
 ```{r}
 #| label: tbl-resultados-aumento-municipal
-#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos em vias municipais
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos em vias urbanas
 
 list_gt_tendencia_pos[[2]]
 ```
 
-## Rodovias
+## Estadas e rodovias
 
 ```{r}
 #| label: tbl-resultados-aumento-rodovias
-#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos em rodovias
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos em estadas e rodovias
 
 list_gt_tendencia_pos[[3]]
 ```
@@ -165,8 +169,8 @@ Entre a @tbl-resultados-reducao-total e a @tbl-resultados-reducao-motociclistas 
 Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de redução:
 
 - **Óbitos totais**: `r list_mun_count_neg[[1]]` municípios
-- **Óbitos em vias municipais**: `r list_mun_count_neg[[2]]` municípios
-- **Óbitos em rodovias**: `r list_mun_count_neg[[3]]` municípios
+- **Óbitos em vias urbanas**: `r list_mun_count_neg[[2]]` municípios
+- **Óbitos em estadas e rodovias**: `r list_mun_count_neg[[3]]` municípios
 - **Óbitos - pedestres**: `r list_mun_count_neg[[4]]` municípios
 - **Óbitos - ciclistas**: `r list_mun_count_neg[[5]]` municípios
 - **Óbitos - ocupantes de motocicleta**: `r list_mun_count_neg[[6]]` municípios
@@ -182,20 +186,20 @@ Nessas tabelas, foram considerados apenas os municípios com resultados estatist
 list_gt_tendencia_neg[[1]]
 ```
 
-## Vias municipais
+## Vias urbanas
 
 ```{r}
 #| label: tbl-resultados-redução-municipal
-#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos em vias municipais
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos em vias urbanas
 
 list_gt_tendencia_neg[[2]]
 ```
 
-## Rodovias
+## Estadas e rodovias
 
 ```{r}
 #| label: tbl-resultados-redução-rodovias
-#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos em rodovias
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos em estadas e rodovias
 
 list_gt_tendencia_neg[[3]]
 ```
@@ -246,20 +250,20 @@ Os municípios classificados com "tendência de redução (significativo)" apres
 tendencia_maps[[1]]
 ```
 
-## Vias municipais
+## Vias urbanas
 
 ```{r}
 #| label: fig-mapa-obitos-municipal
-#| fig-cap: Mapa da tendência resultante, considerando os óbitos em vias municipais
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos em vias urbanas
 
 tendencia_maps[[2]]
 ```
 
-## Rodovias
+## Estadas e rodovias
 
 ```{r}
 #| label: fig-mapa-obitos-rodovia
-#| fig-cap: Mapa da tendência resultante, considerando os óbitos em rodovias
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos em estadas e rodovias
 
 
 tendencia_maps[[3]]
@@ -303,8 +307,8 @@ Entre a @tbl-resultados-aumento-sinistros e a @tbl-resultados-aumento-sinistros-
 Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de aumento:
 
 - **Sinistros com vítimas feridas (leves e graves)**: `r list_mun_count_pos[[7]]` municípios
-- **Sinistros com vítimas feridas (leves e graves - vias municipais)**: `r list_mun_count_pos[[8]]` municípios
-- **Sinistros com vítimas feridas (leves e graves - rodovias)**: `r list_mun_count_pos[[9]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - vias urbanas)**: `r list_mun_count_pos[[8]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - estadas e rodovias)**: `r list_mun_count_pos[[9]]` municípios
 - **Sinistros com vítimas feridas (leves e graves) - pedestres**: `r list_mun_count_pos[[10]]` municípios
 - **Sinistros com vítimas feridas (leves e graves) - ciclistas**: `r list_mun_count_pos[[11]]` municípios
 - **Sinistros com vítimas feridas (leves e graves) - ocupantes de motocicleta**: `r list_mun_count_pos[[12]]` municípios
@@ -319,20 +323,20 @@ Nessas tabelas, foram considerados apenas os municípios com resultados estatist
 list_gt_tendencia_pos[[7]]
 ```
 
-## Vias municipais
+## Vias urbanas
 
 ```{r}
-#| label: tbl-resultados-aumento-sinistros-municipais
-#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves - vias municipais)
+#| label: tbl-resultados-aumento-sinistros-urbanas
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves - vias urbanas)
 
 list_gt_tendencia_pos[[8]]
 ```
 
-## Rodovias
+## Estadas e rodovias
 
 ```{r}
 #| label: tbl-resultados-aumento-sinistros-rodovias
-#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves - rodovias)
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves - estadas e rodovias)
 
 list_gt_tendencia_pos[[9]]
 ```
@@ -373,8 +377,8 @@ Entre a @tbl-resultados-reducao-sinistros e a @tbl-resultados-reducao-sinistros-
 Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de redução:
 
 - **Sinistros com vítimas feridas (leves e graves)**: `r list_mun_count_neg[[7]]` municípios
-- **Sinistros com vítimas feridas (leves e graves - vias municipais)**: `r list_mun_count_neg[[8]]` municípios
-- **Sinistros com vítimas feridas (leves e graves - rodovias)**: `r list_mun_count_neg[[9]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - vias urbanas)**: `r list_mun_count_neg[[8]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - estadas e rodovias)**: `r list_mun_count_neg[[9]]` municípios
 - **Sinistros com vítimas feridas - pedestres (leves e graves)**: `r list_mun_count_neg[[10]]` municípios
 - **Sinistros com vítimas feridas - ciclistas (leves e graves)**: `r list_mun_count_neg[[11]]` municípios
 - **Sinistros com vítimas feridas - ocupantes de motocicleta (leves e graves)**: `r list_mun_count_neg[[12]]` municípios
@@ -389,20 +393,20 @@ Nessas tabelas, foram considerados apenas os municípios com resultados estatist
 list_gt_tendencia_neg[[7]]
 ```
 
-## Vias municipais
+## Vias urbanas
 
 ```{r}
-#| label: tbl-resultados-reducao-sinistros-municipais
-#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves - vias municipais)
+#| label: tbl-resultados-reducao-sinistros-urbanas
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves - vias urbanas)
 
 list_gt_tendencia_neg[[8]]
 ```
 
-## Rodovias
+## Estadas e rodovias
 
 ```{r}
 #| label: tbl-resultados-reducao-sinistros-rodovias
-#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves - rodovias)
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves - estadas e rodovias)
 
 list_gt_tendencia_neg[[9]]
 ```
@@ -453,20 +457,20 @@ Os municípios classificados com "tendência de redução (significativo)" apres
 tendencia_maps[[7]]
 ```
 
-## Vias municipais
+## Vias urbanas
 
 ```{r}
-#| label: fig-mapa-sinistros-municipais
-#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves) em vias municipais
+#| label: fig-mapa-sinistros-urbanas
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves) em vias urbanas
 
 tendencia_maps[[8]]
 ```
 
-## Rodovias
+## Estadas e rodovias
 
 ```{r}
 #| label: fig-mapa-sinistros-rodovias
-#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves) em rodovias
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves) em estadas e rodovias
 
 tendencia_maps[[9]]
 ```
@@ -512,6 +516,8 @@ gt_resumo
 
 ## Conclusão
 
-A simples análise de uma série temporal da sinistralidade no município não é suficiente para avaliar a gravidade de seu cenário, ou a tendência dessa gravidade. Os resultados aqui apresentados servem como um ponto de partida para uma análise mais aprofundada, que deve considerar outros fatores, podendo incluir as características locais dos municípios.
+A gestão da segurança viária tem como um importante pilar o monitoramento e a gestão da informação de dados e indicadores relacionados ao desempenho da mobilidade segura. Buscando novos métodos de realizar essa atividade, esse trabalho traz a aplicação do teste de Mann-Kendall com base em séries temporais mensais de óbitos e sinistros não fatais, em escala geográfica municipal.
+
+O método por si só não é o suficiente para o diagnóstico completo do desempenho da segurança viária nos municípios do estado, mas apresenta mais uma camada de informação importante, principalmente para avaliar os cenários tendenciosos, e não apenas os valores atuais de óbitos e sinistros.  Entende-se que futuros trabalhos podem incluir métodos de clusterização dos municípios e métodos para identificar padrões espaciais da tendência, através da análise de autocorrelação dos dados, e também a aplicação do método em diferentes janelas temporais.
 
 ## Referências
