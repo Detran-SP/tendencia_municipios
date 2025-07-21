@@ -1,3 +1,13 @@
+#' Loads and processes traffic fatality data.
+#'
+#' @param df_vitimas A data frame of victims.
+#' @param df_sinistros A data frame of accidents.
+#' @param via The type of road to filter by (optional). Defaults to "total".
+#' @param modo The mode of transport to filter by (optional). Defaults to "total".
+#'
+#' @return A data frame with the count of fatalities per municipality and month.
+#'
+#' @export
 load_obitos <- function(
     df_vitimas,
     df_sinistros,
@@ -26,6 +36,13 @@ load_obitos <- function(
     df |> count(cod_ibge, ano_mes)
 }
 
+#' Loads municipality data from a CSV file.
+#'
+#' @param path_municipios The path to the CSV file.
+#'
+#' @return A data frame with municipality codes and names.
+#'
+#' @export
 load_municipios <- function(path_municipios) {
     read_csv2(path_municipios, locale = locale(encoding = "latin1")) |>
         clean_names() |>
@@ -33,6 +50,16 @@ load_municipios <- function(path_municipios) {
         select(cod_ibge, municipio)
 }
 
+#' Creates a data frame for modeling.
+#'
+#' This function ensures that all time periods are present for each municipality.
+#'
+#' @param df_base A base data frame with municipality information.
+#' @param df_analise A data frame with the analysis data.
+#'
+#' @return A data frame ready for modeling.
+#'
+#' @export
 create_model_df <- function(df_base, df_analise) {
     unique_period = sort(unique(df_analise$ano_mes))
 
@@ -44,6 +71,13 @@ create_model_df <- function(df_base, df_analise) {
     return(df_base_final)
 }
 
+#' Loads population data from a URL.
+#'
+#' @param url_pop The URL of the Excel file containing population data.
+#'
+#' @return A data frame with municipality codes and estimated population.
+#'
+#' @export
 load_populacao <- function(url_pop) {
     temp = tempfile(fileext = ".xls")
     download.file(
@@ -61,6 +95,11 @@ load_populacao <- function(url_pop) {
     return(df_pop)
 }
 
+#' Loads spatial data for municipalities in São Paulo.
+#'
+#' @return An sf data frame with municipality codes.
+#'
+#' @export
 load_mun_sf <- function() {
     sf_municipios = read_municipality(code_muni = "SP", year = 2022)
 
@@ -69,6 +108,15 @@ load_mun_sf <- function() {
         mutate(cod_ibge = as.character(cod_ibge))
 }
 
+#' Loads and processes data on accidents and victims.
+#'
+#' @param df_sinistros A data frame of accidents.
+#' @param via The type of road to filter by (optional). Defaults to "total".
+#' @param modo The mode of transport to filter by (optional). Defaults to "total".
+#'
+#' @return A data frame with the count of accidents per municipality and month.
+#'
+#' @export
 load_sinistros_vitimas <- function(
     df_sinistros,
     via = "total",
@@ -121,6 +169,13 @@ load_sinistros_vitimas <- function(
     return(df)
 }
 
+#' Loads data on SNT integration.
+#'
+#' @param path The path to the Excel file.
+#'
+#' @return A data frame with municipality codes and SNT integration status.
+#'
+#' @export
 load_snt = function(path) {
     read_excel(path) |>
         mutate(
@@ -133,6 +188,14 @@ load_snt = function(path) {
         )
 }
 
+#' Exports the final data to a CSV file.
+#'
+#' @param df The data frame to export.
+#' @param path The path for the output CSV file.
+#'
+#' @return The path to the exported file.
+#'
+#' @export
 export_final_data = function(df, path) {
     df |>
         pivot_wider(names_from = metric, values_from = value) |>
@@ -150,6 +213,13 @@ export_final_data = function(df, path) {
     return(path)
 }
 
+#' Downloads and loads data from Infosiga.
+#'
+#' @param type The type of data to load ("sinistros" or "vitimas").
+#'
+#' @return A cleaned data frame with the requested Infosiga data.
+#'
+#' @export
 get_infosiga_data <- function(type) {
     temp <- tempdir()
     download_infosiga(temp)
