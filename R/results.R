@@ -1,3 +1,14 @@
+#' Creates a gt table with trend data.
+#'
+#' @param df The input data frame.
+#' @param direcao The direction of the trend ("pos" or "neg").
+#' @param var The variable to be analyzed.
+#' @param color_pal The color palette to be used.
+#' @param df_base The base data frame.
+#'
+#' @return A gt table.
+#'
+#' @export
 make_tendencia_gt = function(
     df,
     direcao = c("pos", "neg"),
@@ -80,6 +91,16 @@ make_tendencia_gt = function(
         )
 }
 
+#' Arranges Mann-Kendall results for spatial data.
+#'
+#' @param sf_sp The spatial data frame for São Paulo.
+#' @param df_results The data frame with the Mann-Kendall results.
+#' @param var The variable to be analyzed.
+#' @param df_base The base data frame.
+#'
+#' @return A spatial data frame with the Mann-Kendall results.
+#'
+#' @export
 arrange_mk_sf = function(sf_sp, df_results, var, df_base) {
     df = df_results |>
         filter(metric %in% c("p_value", "tau"), variavel == var) |>
@@ -109,6 +130,14 @@ arrange_mk_sf = function(sf_sp, df_results, var, df_base) {
     return(sf_mapa)
 }
 
+#' Plots a leaflet map.
+#'
+#' @param sf The spatial data frame.
+#' @param color_pal The color palette to be used.
+#'
+#' @return A leaflet map.
+#'
+#' @export
 plot_leaflet_map = function(sf, color_pal) {
     sf = sf |>
         mutate(
@@ -196,6 +225,15 @@ plot_leaflet_map = function(sf, color_pal) {
         leaflet.extras::addFullscreenControl()
 }
 
+#' Creates a plotly chart.
+#'
+#' @param df The input data frame.
+#' @param mun_input The municipality to be plotted.
+#' @param type The type of data to be plotted ("obitos" or "sinistros").
+#'
+#' @return A plotly chart.
+#'
+#' @export
 make_plotly <- function(df, mun_input, type = c("obitos", "sinistros")) {
     if (type == "obitos") {
         df = df |>
@@ -237,6 +275,13 @@ make_plotly <- function(df, mun_input, type = c("obitos", "sinistros")) {
     ggplotly(plot, tooltip = "text")
 }
 
+#' Filters municipalities with critical trends.
+#'
+#' @param df_results The data frame with the results.
+#'
+#' @return A data frame with the municipalities with critical trends.
+#'
+#' @export
 filter_mun_criticos <- function(df_results) {
     df_tendencias = df_results |>
         filter(p_value < 0.05, tau > 0) |>
@@ -244,6 +289,16 @@ filter_mun_criticos <- function(df_results) {
         select(nome, aumento)
 }
 
+#' Creates a gt table with a summary of the results.
+#'
+#' @param df_final The final data frame.
+#' @param df_base The base data frame.
+#' @param df_populacao The population data frame.
+#' @param df_snt The SNT data frame.
+#'
+#' @return A gt table with the summary of the results.
+#'
+#' @export
 make_gt_resumo <- function(df_final, df_base, df_populacao, df_snt) {
     df_tbl = df_final |>
         filter(metric %in% c("p_value", "tau")) |>
@@ -336,6 +391,15 @@ make_gt_resumo <- function(df_final, df_base, df_populacao, df_snt) {
         tab_options(table.font.size = "11pt")
 }
 
+#' Extracts the length of a data frame.
+#'
+#' @param df The input data frame.
+#' @param var The variable to be analyzed.
+#' @param tendencia The direction of the trend ("pos" or "neg").
+#'
+#' @return The number of rows in the data frame.
+#'
+#' @export
 extract_df_len <- function(df, var, tendencia = c("pos", "neg")) {
     df = df |>
         filter(variavel == var) |>
