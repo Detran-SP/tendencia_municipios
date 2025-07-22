@@ -130,7 +130,7 @@ list(
             list(
                 "Óbitos totais",
                 "Óbitos em vias urbanas",
-                "Óbitos em estadas e rodovias",
+                "Óbitos em estradas e rodovias",
                 "Óbitos - pedestres",
                 "Óbitos - ciclistas",
                 "Óbitos - ocupantes de motocicleta",

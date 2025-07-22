@@ -337,7 +337,7 @@ make_gt_resumo <- function(df_final, df_base, df_populacao, df_snt) {
             integrado_snt = "Integrado ao SNT",
             `Óbitos totais` = "Total",
             `Óbitos em vias urbanas` = "Vias urbanas",
-            `Óbitos em estadas e rodovias` = "Estradas e rodovias",
+            `Óbitos em estradas e rodovias` = "Estradas e rodovias",
             `Óbitos - pedestres` = "Pedestres",
             `Óbitos - ciclistas` = "Ciclistas",
             `Óbitos - ocupantes de motocicleta` = "Motociclistas",
