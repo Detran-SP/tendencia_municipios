@@ -29,8 +29,8 @@ make_tendencia_gt = function(
     }
     footnote_text = ifelse(
         grepl("Óbitos", var),
-        "Período entre 2015 e 2024",
-        "Período entre 2019 e 2024"
+        "Período entre 2021 e 2024",
+        "Período entre 2021 e 2024"
     )
 
     footnote_plot = "A linha tracejada representa a média da série temporal."
