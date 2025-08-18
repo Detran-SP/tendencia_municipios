@@ -35,6 +35,8 @@ list(
             "lightpurple" = "#D3A1FA"
         )
     ),
+    tar_target(date_start, "2021-01-01"),
+    tar_target(date_end, "2024-12-31"),
     ## Dados
     tar_target(
         input_tipo_via,
@@ -63,7 +65,9 @@ list(
             input_tipo_modo,
             load_obitos,
             df_vitimas = infosiga_vitimas,
-            df_sinistros = infosiga_sinistros
+            df_sinistros = infosiga_sinistros,
+            date_start = date_start,
+            date_end = date_end
         )
     ),
     tar_target(base_path, "data/divisoes_regionais_esp.csv", format = "file"),
@@ -78,7 +82,9 @@ list(
             input_tipo_via,
             input_tipo_modo,
             load_sinistros_vitimas,
-            df_sinistros = infosiga_sinistros
+            df_sinistros = infosiga_sinistros,
+            date_start = date_start,
+            date_end = date_end
         )
     ),
     tar_target(

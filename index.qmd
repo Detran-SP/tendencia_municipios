@@ -1,7 +1,7 @@
 ---
 title: "Análise de Tendência da Sinistralidade em Municípios do Estado de São Paulo"
-subtitle: "Nota Técnica 01"
-date: 2025-07-23
+subtitle: "Nota Técnica 01 (VERSÃO 2021-2024)"
+date: 2025-08-18
 author: 
   - "Departamento Estadual de Trânsito de São Paulo (Detran-SP)"
   - "Diretoria de Segurança Viária"

@@ -12,10 +12,16 @@ load_obitos <- function(
     df_vitimas,
     df_sinistros,
     via = "total",
-    modo = "total"
+    modo = "total",
+    date_start,
+    date_end
 ) {
     df = df_vitimas |>
-        filter(gravidade_lesao == "Fatal", data_obito <= "2025-02-28") |>
+        filter(
+            gravidade_lesao == "Fatal",
+            data_obito <= date_end,
+            data_obito >= date_start
+        ) |>
         mutate(
             ano_mes = format(data_obito, "%Y-%m"),
             ano_mes = ym(ano_mes)
@@ -120,13 +126,16 @@ load_mun_sf <- function() {
 load_sinistros_vitimas <- function(
     df_sinistros,
     via = "total",
-    modo = "total"
+    modo = "total",
+    date_start,
+    date_end
 ) {
     df_sinistros_vitimas = df_sinistros |>
         filter(
             gravidade_fatal == 0 | gravidade_leve > 0 | gravidade_grave > 0,
             year(data_sinistro) > 2018,
-            data_sinistro <= "2025-02-28"
+            data_sinistro <= date_end,
+            data_sinistro >= date_start
         ) |>
         mutate(
             ano_mes = format(data_sinistro, "%Y-%m"),
