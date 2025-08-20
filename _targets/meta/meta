@@ -1,9 +1,7 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 object|object|f9490483babd6ec2|||||||||||||||
-infosiga_sinistros|stem|7a04a0117f119688|3cbed33ae9dbcaf4|35065d262bfa6ce9|-2129405166||t20286.6471305396s|s33864837b|33864837|rds|local|vector|||21.365||
 input_tipo_modo|stem|6b059fe278ea675b|7af48cd72512c2b6|2c530c1562a7fbd1|966762474||t20286.6471307711s|s88b|88|rds|local|vector|||0||
 input_tipo_via|stem|40b129bca235e2e0|e8dc07b9c6fd8ce0|2c530c1562a7fbd1|-1749198343||t20286.6471307711s|s97b|97|rds|local|vector|||0||
-infosiga_vitimas|stem|38de9e74b475553f|2633ad2f763580f7|35065d262bfa6ce9|1492097592||t20286.6474003314s|s11530466b|11530466|rds|local|vector|||20.467||
 df_populacao|stem|6d860d18012c33de|86461c193f7603fc|127c05b2b63187f2|1291778507||t20286.6474115582s|s4775b|4775|rds|local|vector|||0.958||
 base_path|stem|38b41ab029f25f7e|a0e841e64b2b068f|2c530c1562a7fbd1|-660591588|data/divisoes_regionais_esp.csv|t20178.5603336217s|s73836b|73836|file|local|vector|||0||
 sf_municipios|stem|0c1ef957ccd84e05|7c0796e8ed0cce28|c7494d0103b25380|-433777918||t20286.6474534563s|s1382409b|1382409|rds|local|vector|||3.562||
@@ -14,27 +12,7 @@ detran_palette|stem|d19105c0397c5fd7|8d410db3a163ec0f|2c530c1562a7fbd1|-54581911
 report|stem|7830349c64d70d70|aa37f050d2efd058|b52f5b2a89a642a9|787668912|index.html*index.qmd|t20234.7544545434s||24020833|file|local|vector|||72.043||✖ Error running quarto cli. ℹ Rerun with `quiet = FALSE` to see the full error message. Caused by error: ! System command 'quarto' failed
 date_end|stem|0c2c04b494a8a379|aff5420c93683d5f|2c530c1562a7fbd1|388116293||t20318.5664709798s|s63b|63|rds|local|vector|||1.239||
 date_start|stem|4041e44a4823e754|6f000478df3eb955|2c530c1562a7fbd1|538713725||t20318.5664715585s|s61b|61|rds|local|vector|||0.001||
-list_df_obitos|stem|811dc61bc40da7d2|ce19e0adadcdfe1d|a099630cd80c6aa1|-1037265270||t20318.566520864s|s51451b|51451|rds|local|vector|||0.908||
-list_df_sinistros|stem|f27f5720207f26cf|f2e07d1bd9149197|6d6ecf89ceb558cc|286756107||t20318.5665706325s|s160032b|160032|rds|local|vector|||2.577||
-list_df_model_obitos|stem|6260d4d7d43da27a|ba53fe60c8e04a05|6df80a73ea7222fb|1647614409||t20318.5665721371s|s138410b|138410|rds|local|vector|||0.046||
-list_df_model_sinistros|stem|03269da235a5d546|5842e386ea5dee98|6cc7aa9c8eabd870|-222006430||t20318.5665737575s|s227309b|227309|rds|local|vector|||0.038||
-list_df_model|stem|960c83547b9d7c36|cce0afdca8c23d59|3ca88eb58769b7d8|-290130853||t20318.566576651s|s366479b|366479|rds|local|vector|||0.001||
-city_names|stem|217f612e93e54330|dde5fcadcc45cbff|d51593e2ac6ee6f9|-1727725597||t20318.5665778084s|s4600b|4600|rds|local|vector|||0.001||
-list_time_series_raw|stem|3c97779892d75dad|e155db4acfcd5b1b|05f66d8a3523f6e7|320614762||t20318.5666617204s|s172822b|172822|rds|local|vector|||7.113||
-list_time_series|stem|3c97779892d75dad|f466901068b0d4c3|50389ec0234d0ceb|-1737495368||t20318.5666627621s|s172822b|172822|rds|local|vector|||0.005||
-list_mk_results|stem|7647a9ee16d022d2|b9a4758a686e146b|81956a489cf1937a|-624315004||t20318.566695864s|s275150b|275150|rds|local|vector|||2.788||
-list_df_mk_results|stem|3076e319a62f271d|1644e57c80875a0f|caa8f216c7a9458a|1548820727||t20318.5667555862s|s165950b|165950|rds|local|vector|||5.003||
-input_list|stem|cd611c98b5d940a8|efddbf8470275b09|94f6f63a4dabb54c|-1617961909||t20318.5667585954s|s533912b|533912|rds|local|vector|||0||
-df_final_raw|stem|881cf661013ed1a6|08d4516d0d8c16c8|4ba0d2490a64d0b6|1360285925||t20318.5667647297s|s206654b|206654|rds|local|vector|||0.398||
-df_final|stem|18a5703e7bf7ab3d|7b42c1fdfdad897f|0d87bceae6e33eac|1900389646||t20318.5667656556s|s220250b|220250|rds|local|vector|||0.006||
-list_sf|stem|48bee0cd54341d07|fa98319c3c282bc5|a05176ef6f0d7548|708308966||t20318.5667773454s|s16856433b|16856433|rds|local|vector|||0.198||
-gt_resumo|stem|d258fd10d05471c9|0731f1c3319c0302|932b53797773d9df|-1883774568||t20318.5667796602s|s298657b|298657|rds|local|vector|||0.099||
-list_mun_count_neg|stem|1b9ef7cbba3b0d39|072a2662ed491d71|d64f0cc400711927|482291579||t20318.5668087111s|s80b|80|rds|local|vector|||0.081||
-list_mun_count_pos|stem|e28da7d73feb8276|249355bd3fd2eb99|d64f0cc400711927|285750243||t20318.5668764195s|s83b|83|rds|local|vector|||0.079||
-tendencia_maps|stem|59010eaad95d7c80|af9c748e30db87ff|108ce8b0c46d3375|-126226107||t20318.5669214426s|s67410142b|67410142|rds|local|vector|||0.969|sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'|
-df_final_export|stem|57b507eb21c3bdfd|84e597ecff59b197|9ddaef24c275ee9d|-131067547|data/df_final.csv|t20318.6708980314s|s680938b|680938|file|local|vector|||0.225||
-list_gt_tendencia_neg|stem|88a88538f5fca97a|6da3b53dde5af724|e033a8d7afedd351|152838369||t20318.670924999s|s1387923b|1387923|rds|local|vector|||1.983||
-list_gt_tendencia_pos|stem|d81a0dd01259c463|43698626547394ee|e033a8d7afedd351|1953687512||t20318.6709908555s|s2068477b|2068477|rds|local|vector|||5.281||
+path_export_csv|stem|57b507eb21c3bdfd|86e1e4626fb62859|2c530c1562a7fbd1|134510534|data/df_final.csv|t20318.6708980314s|s680938b|680938|file|local|vector|||1.174||
 filter_mun_criticos|function|aa4ff2cc65645146
 export_final_data|function|e1c804ad80575b13
 join_final_df|function|4229dc3cd7c4a1f6
@@ -44,7 +22,7 @@ create_time_series|function|a96e99d97398a059
 load_sinistros_vitimas|function|915804cdb79c256d
 make_tendencia_gt|function|368eb0e1475de64c
 arrange_final_results|function|a7002f090c9ce1ce
-.Random.seed|object|3e0d766be11f0774
+.Random.seed|object|e1959f96e334ad38
 set_list_names|function|18a2cc9a0e0a7293
 create_model_df|function|004b1269bc36aead
 make_plotly|function|c695e123baece7d6
@@ -57,4 +35,26 @@ load_municipios|function|acde0f3eac40a58d
 arrange_mk_sf|function|b2360a2cf1077183
 make_gt_resumo|function|490bf366df69e230
 load_snt|function|6c1a88bde32824c8
-path_export_csv|stem|57b507eb21c3bdfd|86e1e4626fb62859|2c530c1562a7fbd1|134510534|data/df_final.csv|t20318.6708980314s|s680938b|680938|file|local|vector|||1.174||
+infosiga_sinistros|stem|8d78cce0a3b177b0|3cbed33ae9dbcaf4|35065d262bfa6ce9|-2129405166||t20320.8629590092s|s34230691b|34230691|rds|local|vector|||27.993||
+infosiga_vitimas|stem|6e4d2bea1455b022|2633ad2f763580f7|35065d262bfa6ce9|1492097592||t20320.8632561156s|s7839497b|7839497|rds|local|vector|||23.78||
+list_df_obitos|stem|88b1a01ca522b890|ce19e0adadcdfe1d|73b10a8aa494c808|-1037265270||t20320.863288986s|s51438b|51438|rds|local|vector|||0.788||
+list_df_sinistros|stem|25c0f9387bcd32bf|f2e07d1bd9149197|8594417fee1d3210|286756107||t20320.8633316943s|s160423b|160423|rds|local|vector|||2.037||
+list_df_model_obitos|stem|069259e85b70e671|ba53fe60c8e04a05|c5387e9736a114d6|1647614409||t20320.863333199s|s138410b|138410|rds|local|vector|||0.038||
+list_df_model_sinistros|stem|2ee209a345327765|5842e386ea5dee98|c80059150b737b70|-222006430||t20320.8633349351s|s227528b|227528|rds|local|vector|||0.039||
+list_df_model|stem|9f04cf4cb27a1bbc|cce0afdca8c23d59|f49767080b0f512d|-290130853||t20320.8633378286s|s366672b|366672|rds|local|vector|||0||
+city_names|stem|217f612e93e54330|dde5fcadcc45cbff|98733f36dce092e7|-1727725597||t20320.863338986s|s4600b|4600|rds|local|vector|||0.002||
+list_time_series_raw|stem|4fbc1ff1545288c8|e155db4acfcd5b1b|6c80cb547fc22b98|320614762||t20320.8634299582s|s173080b|173080|rds|local|vector|||7.712||
+list_time_series|stem|4fbc1ff1545288c8|f466901068b0d4c3|2a9fd69633070029|-1737495368||t20320.8634307684s|s173080b|173080|rds|local|vector|||0.003||
+list_mk_results|stem|7518b98c372a85e1|b9a4758a686e146b|1633c1558253c4fc|-624315004||t20320.8634746342s|s275289b|275289|rds|local|vector|||3.652||
+list_df_mk_results|stem|15ff0cc008225799|1644e57c80875a0f|122637fe386b9e6c|1548820727||t20320.8635658378s|s166136b|166136|rds|local|vector|||7.67||
+input_list|stem|556062d1a8c06834|efddbf8470275b09|b2023932b8cfabaf|-1617961909||t20320.8635690786s|s534344b|534344|rds|local|vector|||0||
+df_final_raw|stem|666b32e76513a71c|08d4516d0d8c16c8|9e23d3a2372716d1|1360285925||t20320.8635754443s|s206834b|206834|rds|local|vector|||0.403||
+df_final|stem|bd1e6fd0bc4736c9|7b42c1fdfdad897f|a1dd51388f41a80b|1900389646||t20320.8635763702s|s220430b|220430|rds|local|vector|||0.005||
+list_sf|stem|a03c1b1d8209b720|fa98319c3c282bc5|6ebf99ddb597146f|708308966||t20320.8635895647s|s16856583b|16856583|rds|local|vector|||0.198||
+gt_resumo|stem|e7388d322d74cf6f|0731f1c3319c0302|28c1281774d04fa9|-1883774568||t20320.8635922267s|s298878b|298878|rds|local|vector|||0.115||
+df_final_export|stem|bcb24fc520ff3b50|84e597ecff59b197|218fc5c0854af171|-131067547|data/df_final.csv|t20320.8635941943s|s681185b|681185|file|local|vector|||0.117||
+list_gt_tendencia_neg|stem|2077afc3a2e84c11|6da3b53dde5af724|4a048a113d9539cc|152838369||t20320.8636201202s|s1378245b|1378245|rds|local|vector|||1.902||
+list_mun_count_neg|stem|34160b287cd3a1ec|072a2662ed491d71|225fe25b1b83d535|482291579||t20320.8636226665s|s81b|81|rds|local|vector|||0.082||
+list_gt_tendencia_pos|stem|df1768622ef9650c|43698626547394ee|4a048a113d9539cc|1953687512||t20320.8636894489s|s2084499b|2084499|rds|local|vector|||5.349||
+list_mun_count_pos|stem|8106d0c5a0838b21|249355bd3fd2eb99|225fe25b1b83d535|285750243||t20320.8636918795s|s83b|83|rds|local|vector|||0.078||
+tendencia_maps|stem|9abeb62340bb1a5a|af9c748e30db87ff|121c2c9453f57df4|-126226107||t20320.8637374813s|s67410666b|67410666|rds|local|vector|||0.976|sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'|
