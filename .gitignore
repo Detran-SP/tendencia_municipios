@@ -49,3 +49,5 @@ po/*~
 rsconnect/
 
 cost_dseg_tendencia_municipios.*
+
+data/dados_infosiga.zip
