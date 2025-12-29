@@ -906,27 +906,6 @@
       ],
       "Hash": "ac107251d9d9fd72f0ca8049988f1d7f"
     },
-    "httr2": {
-      "Package": "httr2",
-      "Version": "1.1.2",
-      "Source": "Repository",
-      "Repository": "RSPM",
-      "Requirements": [
-        "R",
-        "R6",
-        "cli",
-        "curl",
-        "glue",
-        "lifecycle",
-        "magrittr",
-        "openssl",
-        "rappdirs",
-        "rlang",
-        "vctrs",
-        "withr"
-      ],
-      "Hash": "ade531519694081d91036b509eb30594"
-    },
     "ids": {
       "Package": "ids",
       "Version": "1.0.1",
@@ -1293,28 +1272,26 @@
     },
     "ost.utils": {
       "Package": "ost.utils",
-      "Version": "0.1.1",
+      "Version": "0.2.0",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "pedrobsantos21",
       "RemoteRepo": "ost.utils",
       "RemoteRef": "main",
-      "RemoteSha": "d0aef5a54e56de0c355477cccceddef3924aa6d4",
+      "RemoteSha": "74752536a4adf10c75795fc1920e487b530d9379",
       "Requirements": [
         "R",
-        "cli",
         "dplyr",
         "fs",
         "ggplot2",
         "glue",
-        "httr2",
         "lubridate",
         "readr",
         "rlang",
         "stringr"
       ],
-      "Hash": "3c9a69a4d8de3d8f9b3532abdfbae33c"
+      "Hash": "521ce75db6e4fb18d4a355bc8fb65a34"
     },
     "patchwork": {
       "Package": "patchwork",

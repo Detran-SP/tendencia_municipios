@@ -49,13 +49,21 @@ list(
     ),
     tar_target(
         input_tipo_modo,
-        c("total", "total", "total", "A pé", "Bicicleta", "Motocicleta")
+        c("total", "total", "total", "Pedestre", "Bicicleta", "Motocicleta")
+    ),
+    tar_target(
+        path_infosiga,
+        "data/dados_infosiga.zip",
+        format = "file"
     ),
     tar_target(
         infosiga_vitimas,
-        get_infosiga_data("pessoas")
+        get_infosiga_data("pessoas", path_infosiga)
     ),
-    tar_target(infosiga_sinistros, get_infosiga_data('sinistros')),
+    tar_target(
+        infosiga_sinistros,
+        get_infosiga_data('sinistros', path_infosiga)
+    ),
     tar_target(
         list_df_obitos,
         map2(
@@ -213,7 +221,7 @@ list(
         )
     ),
     ## Report
-    #tar_quarto(report, "index.qmd"),
+    tar_quarto(report, "index.qmd"),
     ## Export
     tar_target(path_export_csv, "data/df_final.csv", format = "file"),
     tar_target(

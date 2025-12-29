@@ -30,7 +30,11 @@ load_obitos <- function(
     }
 
     if (modo != "total") {
-        df = df |> filter(tipo_veiculo_vitima == modo)
+        if (modo == "Pedestre") {
+            df <- df |> filter(tipo_de_vitima == modo)
+        } else {
+            df <- df |> filter(tipo_veiculo_vitima == modo)
+        }
     }
 
     df |> count(cod_ibge, ano_mes)
@@ -124,7 +128,9 @@ load_sinistros_vitimas <- function(
 ) {
     df_sinistros_vitimas = df_sinistros |>
         filter(
-            gravidade_fatal == 0 | gravidade_leve > 0 | gravidade_grave > 0,
+            qtd_gravidade_fatal == 0 |
+                qtd_gravidade_leve > 0 |
+                qtd_gravidade_grave > 0,
             year(data_sinistro) > 2018,
             data_sinistro <= "2025-02-28"
         ) |>
@@ -135,9 +141,9 @@ load_sinistros_vitimas <- function(
         select(
             cod_ibge,
             ano_mes,
-            tp_veiculo_bicicleta,
+            qtd_bicicleta,
             tipo_via,
-            tp_veiculo_motocicleta,
+            qtd_motocicleta,
             tp_sinistro_atropelamento
         )
 
@@ -148,18 +154,18 @@ load_sinistros_vitimas <- function(
 
     if (modo == "Bicicleta") {
         df_sinistros_vitimas = df_sinistros_vitimas |>
-            filter(tp_veiculo_bicicleta > 0)
+            filter(qtd_bicicleta > 0)
     }
 
     if (modo == "Motocicleta") {
         df_sinistros_vitimas = df_sinistros_vitimas |>
-            filter(tp_veiculo_motocicleta > 0)
+            filter(qtd_motocicleta > 0)
     }
 
     if (modo == "Pedestre") {
         df_sinistros_vitimas = df_sinistros_vitimas |>
             filter(
-                tp_sinistro_atropelamento > 0 & tp_veiculo_bicicleta == 0
+                tp_sinistro_atropelamento > 0 & qtd_bicicleta == 0
             )
     }
 
@@ -216,20 +222,18 @@ export_final_data = function(df, path) {
 #' Downloads and loads data from Infosiga.
 #'
 #' @param type The type of data to load ("sinistros" or "vitimas").
+#' @param path Path of infosiga zip
 #'
 #' @return A cleaned data frame with the requested Infosiga data.
 #'
 #' @export
-get_infosiga_data <- function(type) {
-    temp <- tempdir()
-    download_infosiga(temp)
-    df <- load_infosiga(type, temp) |>
-        clean_infosiga(type)
+get_infosiga_data <- function(type, path) {
+    df <- ost.utils::load_infosiga(type, path) |>
+        ost.utils::clean_infosiga(type)
 
     if (type == "sinistros") {
         df <- df |> filter(tipo_registro != "Notificação")
     }
 
-    on.exit(unlink(temp))
     return(df)
 }
