@@ -1,0 +1,18 @@
+# Metodologia {#sec-methods}
+
+## Tratamento dos dados
+
+O trabalho foi realizado com base nos dados abertos do Sistema de Informações Gerenciais de Sinistros de Trânsito do Estado de São Paulo - Infosiga.SP [@detran-spSistemaInformacoesGerenciais2025], considerando a quantidade de óbitos e sinistros com vítimas leves a graves. Para a aplicação do método de Mann-Kendall, foram considerados os dados de óbitos entre janeiro de 2015 e fevereiro de 2025 em escala mensal.
+
+Para os dados de sinistros com feridos leves a graves, foi considerado o período entre janeiro de 2019 e fevereiro de 2025, também em escala mensal, desconsiderando os sinistros que resultaram em óbitos e desconsiderando as ocorrências identificadas como "notificação". A janela temporal foi selecionada considerando que o sistema não possui o registro de sinistros não fatais antes de 2019.
+
+Para os óbitos e sinistros com vítimas feridas (leves e graves), buscou-se analisar de forma separada os eventos classificados por tipo de via (Vias urbanas, Estradas e rodovias) e por modo de transporte da vítima (a pé, bicicleta, motocicleta). Para o período dos óbitos, considerou-se o atributo `data_obito`, e para o filtro do período do sinistro foi considerado o atributo `data_sinistro`, com filtro para as ocorrências registradas como `SINISTRO NAO FATAL`. Com a chave `municipio`, os dados foram agrupados de acordo com os 645 municípios do estado e pelo mês/ano registrado. Com isso, foram criadas 645 séries temporais mensais para cada um dos objetos em análise. Todo o processo foi desenvolvido com o auxílio da linguagem de programação R [@rcoreteam2021].
+
+## Teste de Mann-Kendall
+
+O Teste de Mann-Kendall (MK) é um método estatístico não paramétrico^[Um teste não paramétrico é um teste estatístico que não assume que os dados seguem uma distribuição específica, como a normal. Ele é baseado em ordens, sinais ou rankings dos dados, e não nos próprios valores numéricos.] utilizado para detectar tendências monotônicas^[Tendências monotônicas são padrões de comportamento em uma série temporal onde os valores seguem consistentemente uma única direção ao longo do tempo — sempre aumentando ou sempre diminuindo, embora não necessariamente de forma linear ou constante.] em séries temporais. Por não assumir uma distribuição específica dos dados, é especialmente útil em estudos ambientais, hidrológicos e climáticos, onde os dados podem apresentar variabilidade significativa e não seguir distribuições normais [@mannNonparametricTestsTrend1945; @kendallRankCorrelationMethods1975].
+
+O teste avalia se há uma tendência crescente ou decrescente ao longo do tempo, sem exigir que essa tendência seja linear. A estatística de teste é baseada no número de pares ordenados de observações em que os valores posteriores são maiores ou menores que os anteriores. A significância da tendência é avaliada por meio do $p$-valor associado à estatística de Mann-Kendall, permitindo inferir se a tendência observada é aleatória ou não.
+
+Um dos resultados numéricos do teste é o coeficiente Tau, que é uma medida de correlação que expressa a direção e a força da tendência em uma série temporal. Seu valor varia entre -1 e 1, onde valores próximos a 1 indicam uma forte tendência crescente, valores próximos a -1 indicam uma forte tendência decrescente e valores próximos a 0 sugerem ausência de tendência. O método não faz análise da grandeza dos valores, assim, o Tau representa apenas a tendência dos valores. Para o presente trabalho, o MK foi aplicado com auxílio da biblioteca {trend} da linguagem R [@pohlertTrendNonParametricTrend2015].
+

@@ -1,0 +1,450 @@
+# Resultados {#sec-results}
+
+```{css}
+div.leaflet-control {
+    text-align: left;
+}
+```
+
+```{r}
+#| label: setup-resultados
+#| include: false
+
+library(targets)
+
+tar_load(list_gt_tendencia_pos)
+tar_load(list_gt_tendencia_neg)
+tar_load(list_mun_count_pos)
+tar_load(list_mun_count_neg)
+tar_load(tendencia_maps)
+tar_load(gt_resumo)
+```
+
+Os resultados foram organizados entre as análises para os dados de óbitos (@sec-results-obitos), dados dos sinistros com feridos leves e graves (@sec-results-sinistros) e uma tabela-resumo dos municípios (@sec-results-tbl-resumo)
+
+## Óbitos {#sec-results-obitos}
+
+A @sec-obitos-aumento apresenta os resultados com tendência de aumento, enquanto a @sec-obitos-reducao apresenta os resultados com tendência de redução. Os mapas da @sec-obitos-mapas consolidam os resultados de tendência de óbitos nos municípios.
+
+### Tendência de aumento {#sec-obitos-aumento}
+
+Entre a @tbl-resultados-aumento-total e a @tbl-resultados-aumento-motociclistas estão apresentados os municípios com tendência de aumento na quantidade de óbitos no trânsito, ordenados pelo valor do Tau. Quanto maior o valor de Tau, maior a intensidade de tendência de aumento.
+
+Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de aumento:
+
+- **Óbitos totais**: `r list_mun_count_pos[[1]]` municípios
+- **Óbitos em vias urbanas**: `r list_mun_count_pos[[2]]` municípios
+- **Óbitos em estradas e rodovias**: `r list_mun_count_pos[[3]]` municípios
+- **Óbitos - pedestres**: `r list_mun_count_pos[[4]]` municípios
+- **Óbitos - ciclistas**: `r list_mun_count_pos[[5]]` municípios
+- **Óbitos - ocupantes de motocicleta**: `r list_mun_count_pos[[6]]` municípios
+
+::: {.panel-tabset}
+## Total
+
+```{r}
+#| label: tbl-resultados-aumento-total
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos
+
+list_gt_tendencia_pos[[1]]
+```
+
+## Vias urbanas
+
+```{r}
+#| label: tbl-resultados-aumento-municipal
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos em vias urbanas
+
+list_gt_tendencia_pos[[2]]
+```
+
+## Estradas e rodovias
+
+```{r}
+#| label: tbl-resultados-aumento-rodovias
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos em estradas e rodovias
+
+list_gt_tendencia_pos[[3]]
+```
+
+## Pedestres
+
+```{r}
+#| label: tbl-resultados-aumento-pedestres
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos de pedestres
+
+list_gt_tendencia_pos[[4]]
+```
+
+## Ciclistas
+
+```{r}
+#| label: tbl-resultados-aumento-ciclistas
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos de ciclistas
+
+list_gt_tendencia_pos[[5]]
+```
+
+## Ocupantes de motocicleta
+
+```{r}
+#| label: tbl-resultados-aumento-motociclistas
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de óbitos de ocupantes de motocicleta
+
+list_gt_tendencia_pos[[6]]
+```
+
+:::
+
+### Tendência de redução {#sec-obitos-reducao}
+
+Entre a @tbl-resultados-reducao-total e a @tbl-resultados-reducao-motociclistas estão apresentados os municípios com tendência de redução na quantidade de óbitos no trânsito, ordenados pelo valor do Tau. Quanto menor o valor de Tau, maior a intensidade de tendência de redução.
+
+Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de redução:
+
+- **Óbitos totais**: `r list_mun_count_neg[[1]]` municípios
+- **Óbitos em vias urbanas**: `r list_mun_count_neg[[2]]` municípios
+- **Óbitos em estradas e rodovias**: `r list_mun_count_neg[[3]]` municípios
+- **Óbitos - pedestres**: `r list_mun_count_neg[[4]]` municípios
+- **Óbitos - ciclistas**: `r list_mun_count_neg[[5]]` municípios
+- **Óbitos - ocupantes de motocicleta**: `r list_mun_count_neg[[6]]` municípios
+
+::: {.panel-tabset}
+## Total
+
+```{r}
+#| label: tbl-resultados-reducao-total
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos
+
+
+list_gt_tendencia_neg[[1]]
+```
+
+## Vias urbanas
+
+```{r}
+#| label: tbl-resultados-redução-municipal
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos em vias urbanas
+
+list_gt_tendencia_neg[[2]]
+```
+
+## Estradas e rodovias
+
+```{r}
+#| label: tbl-resultados-redução-rodovias
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos em estradas e rodovias
+
+list_gt_tendencia_neg[[3]]
+```
+
+## Pedestres
+
+```{r}
+#| label: tbl-resultados-reducao-pedestres
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos de pedestres
+
+list_gt_tendencia_neg[[4]]
+```
+
+## Ciclistas
+
+```{r}
+#| label: tbl-resultados-reducao-ciclistas
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos de ciclistas
+
+list_gt_tendencia_neg[[5]]
+```
+
+## Ocupantes de motocicleta
+
+```{r}
+#| label: tbl-resultados-reducao-motociclistas
+#| tbl-cap: Municípios com tendência significativa de redução na quantidade de óbitos de ocupantes de motocicleta
+
+list_gt_tendencia_neg[[6]]
+```
+
+:::
+
+### Mapas de tendência {#sec-obitos-mapas}
+
+Os mapas a seguir apresentam a tendência de aumento ou redução na quantidade de óbitos no trânsito nos municípios do estado de São Paulo, considerando também as tendências sem significância estatística. Os municípios classificados com "tendência de aumento (significativo)" apresentam um valor de Tau acima de 0 e um $p$-valor abaixo de 0,05. Os municípios classificados com "tendência de aumento (não significativo)" apresentam um valor de Tau acima de 0 e um $p$-valor acima de 0,05.
+
+Os municípios classificados com "tendência de redução (significativo)" apresentam um valor de Tau abaixo de 0 e um $p$-valor abaixo de 0,05. Os municípios classificados com "tendência de redução (não significativo)" apresentam um valor de Tau abaixo de 0 e um $p$-valor acima de 0,05.
+
+:::{.panel-tabset}
+
+## Total
+
+```{r}
+#| label: fig-mapa-obitos
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos
+
+tendencia_maps[[1]]
+```
+
+## Vias urbanas
+
+```{r}
+#| label: fig-mapa-obitos-municipal
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos em vias urbanas
+
+tendencia_maps[[2]]
+```
+
+## Estradas e rodovias
+
+```{r}
+#| label: fig-mapa-obitos-rodovia
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos em estradas e rodovias
+
+
+tendencia_maps[[3]]
+```
+
+## Pedestres
+
+```{r}
+#| label: fig-mapa-obitos-pedestres
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos de pedestres
+
+tendencia_maps[[4]]
+```
+
+## Ciclistas
+
+```{r}
+#| label: fig-mapa-obitos-ciclistas
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos de ciclistas
+
+tendencia_maps[[5]]
+```
+
+## Ocupantes de motocicleta
+
+```{r}
+#| label: fig-mapa-obitos-motociclistas
+#| fig-cap: Mapa da tendência resultante, considerando os óbitos de ocupantes de motocicleta
+
+tendencia_maps[[6]]
+```
+
+:::
+
+## Sinistros com Feridos Leves e Graves {#sec-results-sinistros}
+
+### Tendência de aumento
+
+Entre a @tbl-resultados-aumento-sinistros e a @tbl-resultados-aumento-sinistros-motociclistas estão apresentados os municípios com tendência de aumento na quantidade de sinistros com feridos leves e graves, ordenados pelo valor do Tau. Quanto maior o valor de Tau, maior a intensidade de tendência de aumento.
+
+Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de aumento:
+
+- **Sinistros com vítimas feridas (leves e graves)**: `r list_mun_count_pos[[7]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - vias urbanas)**: `r list_mun_count_pos[[8]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - estradas e rodovias)**: `r list_mun_count_pos[[9]]` municípios
+- **Sinistros com vítimas feridas (leves e graves) - pedestres**: `r list_mun_count_pos[[10]]` municípios
+- **Sinistros com vítimas feridas (leves e graves) - ciclistas**: `r list_mun_count_pos[[11]]` municípios
+- **Sinistros com vítimas feridas (leves e graves) - ocupantes de motocicleta**: `r list_mun_count_pos[[12]]` municípios
+
+::: {.panel-tabset}
+## Total
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves)
+
+list_gt_tendencia_pos[[7]]
+```
+
+## Vias urbanas
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros-urbanas
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves - vias urbanas)
+
+list_gt_tendencia_pos[[8]]
+```
+
+## Estradas e rodovias
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros-rodovias
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves - estradas e rodovias)
+
+list_gt_tendencia_pos[[9]]
+```
+
+## Pedestres
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros-pedestres
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com pedestres feridos (leves e graves)
+
+list_gt_tendencia_pos[[10]]
+```
+
+## Ciclistas
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros-ciclistas
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com ciclistas feridos (leves e graves)
+
+list_gt_tendencia_pos[[11]]
+```
+
+## Ocupantes de motocicleta
+
+```{r}
+#| label: tbl-resultados-aumento-sinistros-motociclistas
+#| tbl-cap: Municípios com tendência significativa de aumento na quantidade de sinistros com ocupantes de motocicleta feridos (leves e graves)
+
+list_gt_tendencia_pos[[12]]
+```
+
+:::
+
+### Tendência de redução
+
+Entre a @tbl-resultados-reducao-sinistros e a @tbl-resultados-reducao-sinistros-motociclistas estão apresentados os municípios com tendência de redução na quantidade de sinistros com feridos leves e graves, ordenados pelo valor do Tau. Quanto menor o valor de Tau, maior a intensidade de tendência de redução.
+
+Nessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos ($p$-valor < 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de redução:
+
+- **Sinistros com vítimas feridas (leves e graves)**: `r list_mun_count_neg[[7]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - vias urbanas)**: `r list_mun_count_neg[[8]]` municípios
+- **Sinistros com vítimas feridas (leves e graves - estradas e rodovias)**: `r list_mun_count_neg[[9]]` municípios
+- **Sinistros com vítimas feridas - pedestres (leves e graves)**: `r list_mun_count_neg[[10]]` municípios
+- **Sinistros com vítimas feridas - ciclistas (leves e graves)**: `r list_mun_count_neg[[11]]` municípios
+- **Sinistros com vítimas feridas - ocupantes de motocicleta (leves e graves)**: `r list_mun_count_neg[[12]]` municípios
+
+::: {.panel-tabset}
+## Total
+
+```{r}
+#| label: tbl-resultados-reducao-sinistros
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves)
+
+list_gt_tendencia_neg[[7]]
+```
+
+## Vias urbanas
+
+```{r}
+#| label: tbl-resultados-reducao-sinistros-urbanas
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves - vias urbanas)
+
+list_gt_tendencia_neg[[8]]
+```
+
+## Estradas e rodovias
+
+```{r}
+#| label: tbl-resultados-reducao-sinistros-rodovias
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves - estradas e rodovias)
+
+list_gt_tendencia_neg[[9]]
+```
+
+## Pedestres
+
+```{r}
+#| label: tbl-resultados-reducao-sinistros-pedestres
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com pedestres feridos (leves e graves)
+
+list_gt_tendencia_neg[[10]]
+```
+
+## Ciclistas
+
+```{r}
+#| label: tbl-resultados-reducao-sinistros-ciclistas
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com ciclistas feridos (leves e graves)
+
+list_gt_tendencia_neg[[11]]
+```
+
+## Ocupantes de motocicleta
+
+```{r}
+#| label: tbl-resultados-reducao-sinistros-motociclistas
+#| tbl-cap: Municípios com tendência de redução na quantidade de sinistros com ocupantes de motocicleta feridos (leves e graves)
+
+list_gt_tendencia_neg[[12]]
+```
+
+:::
+
+### Mapas de tendência
+
+Os mapas a seguir apresentam a tendência de aumento ou redução na quantidade de sinistros com feridos leves e graves no trânsito nos municípios do estado de São Paulo, considerando também as tendências sem significância estatística. Os municípios classificados com "tendência de aumento (significativo)" apresentam um valor de Tau acima de 0 e um $p$-valor abaixo de 0,05. Os municípios classificados com "tendência de aumento (não significativo)" apresentam um valor de Tau acima de 0 e um $p$-valor acima de 0,05.
+
+Os municípios classificados com "tendência de redução (significativo)" apresentam um valor de Tau abaixo de 0 e um $p$-valor abaixo de 0,05. Os municípios classificados com "tendência de redução (não significativo)" apresentam um valor de Tau abaixo de 0 e um $p$-valor acima de 0,05.
+
+::: {.panel-tabset}
+
+## Total
+
+```{r}
+#| label: fig-mapa-sinistros
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves)
+
+tendencia_maps[[7]]
+```
+
+## Vias urbanas
+
+```{r}
+#| label: fig-mapa-sinistros-urbanas
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves) em vias urbanas
+
+tendencia_maps[[8]]
+```
+
+## Estradas e rodovias
+
+```{r}
+#| label: fig-mapa-sinistros-rodovias
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves) em estradas e rodovias
+
+tendencia_maps[[9]]
+```
+
+## Pedestres
+```{r}
+#| label: fig-mapa-sinistros-pedestres
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com pedestres feridos (leves e graves)
+
+tendencia_maps[[10]]
+```
+
+## Ciclistas
+
+```{r}
+#| label: fig-mapa-sinistros-ciclistas
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com ciclistas feridos (leves e graves)
+
+tendencia_maps[[11]]
+```
+
+## Ocupantes de motocicleta
+```{r}
+#| label: fig-mapa-sinistros-motociclistas
+#| fig-cap: Mapa da tendência resultante, considerando os sinistros com ocupantes de motocicleta feridos (leves e graves)
+
+tendencia_maps[[12]]
+```
+
+:::
+
+## Tabela-resumo {#sec-results-tbl-resumo}
+
+A @tbl-final apresenta a lista dos 645 municípios do estado e indica se ele possui alguma tendência significativa de aumento considerando as categorias anteriormente apresentadas.
+     
+```{r}
+#| label: tbl-final
+#| tbl-cap: Municípios com tendência de aumento de óbitos e/ou sinistros com vítimas (leves e graves)
+
+gt_resumo
+
+```
+

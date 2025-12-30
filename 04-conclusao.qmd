@@ -1,0 +1,6 @@
+# Conclusão {#sec-conclusion}
+
+A gestão da segurança viária tem como um importante pilar o monitoramento e a gestão da informação de dados e indicadores relacionados ao desempenho da mobilidade segura. Buscando novos métodos de realizar essa atividade, este trabalho traz a aplicação do teste de Mann-Kendall com base em séries temporais mensais de óbitos e sinistros não fatais, em escala geográfica municipal.
+
+O método por si só não é suficiente para o diagnóstico completo do desempenho da segurança viária nos municípios do estado, mas apresenta mais uma camada de informação importante, principalmente para avaliar os cenários tendenciosos, e não apenas os valores atuais de óbitos e sinistros.  Entende-se que futuros trabalhos podem incluir métodos de clusterização dos municípios e métodos para identificar padrões espaciais da tendência, por meio da análise de autocorrelação dos dados, e também a aplicação do método em diferentes janelas temporais.
+

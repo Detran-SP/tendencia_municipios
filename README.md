@@ -6,7 +6,16 @@ Esse repositório contém o código de cálculo e renderização da nota técnic
 
 ## Estrutura
 
-O arquivo `index.qmd` apresenta o conteúdo do relatório. Os scripts em `R/` apresentam todas as funções utilizadas para os cálculos. Em `data/` estão parte dos dados utilizados e exportados
+O projeto está organizado como um **Quarto Book**. O arquivo `_quarto.yml` contém a configuração do book. Os capítulos estão na raiz do projeto:
+
+- `index.qmd` - Página inicial do book (contém setup e configurações)
+- `01-introducao.qmd` - Introdução
+- `02-metodologia.qmd` - Metodologia
+- `03-resultados.qmd` - Resultados
+- `04-conclusao.qmd` - Conclusão
+- `05-referencias.qmd` - Referências
+
+Os scripts em `R/` apresentam todas as funções utilizadas para os cálculos. Em `data/` estão parte dos dados utilizados e exportados
 
 ## Requisitos
 
@@ -27,8 +36,10 @@ renv::restore()
 targets::tar_make()
 ```
 
-3. Renderização do relatório com o [Quarto Markdown](https://quarto.org/):
+3. Renderização do book com o [Quarto](https://quarto.org/):
 
 ```
-quarto render index.qmd
+quarto render
 ```
+
+O comando `quarto render` irá renderizar todo o book conforme configurado no arquivo `_quarto.yml`. O resultado será gerado no diretório `_book/`.

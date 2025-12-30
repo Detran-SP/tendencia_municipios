@@ -1,0 +1,51 @@
+project:
+  type: book
+
+book:
+  title: "Análise de Tendência da Sinistralidade em Municípios do Estado de São Paulo"
+  subtitle: "Nota Técnica 01"
+  author:
+    - "Departamento Estadual de Trânsito de São Paulo (Detran-SP)"
+    - "Diretoria de Segurança Viária"
+    - "Coordenadoria Geral de Segurança Viária"
+    - "Coordenadoria do Observatório de Segurança no Trânsito"
+    - "Divisão de Estudos para Segurança no Trânsito"
+    - "Divisão de Estatísticas de Trânsito"
+  date: 2025-07-23
+  chapters:
+    - index.qmd
+    - 01-introducao.qmd
+    - 02-metodologia.qmd
+    - 03-resultados.qmd
+    - 04-conclusao.qmd
+    - 05-referencias.qmd
+
+bibliography: refs.bib
+
+format:
+  html:
+    theme: default
+    lang: pt-BR
+    toc: true
+    toc-depth: 4
+    fig-align: center
+    cap-location: top
+    fig-height: 4
+    fig-width: 6
+    fig-dpi: 300
+    code-links:
+      - repo
+    number-sections: true
+
+execute:
+  warning: false
+  message: false
+  echo: false
+  freeze: false
+  knitr:
+    opts_knit:
+      fig.showtext: true
+
+editor_options:
+  chunk_output_type: console
+

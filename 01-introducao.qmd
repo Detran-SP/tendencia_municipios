@@ -1,0 +1,10 @@
+# Introdução {#sec-introduction}
+
+A gestão da mobilidade segura tem como um de seus principais pilares o monitoramento do desempenho da segurança viária, através do acompanhamento de intervenções e de indicadores quantitativos, que podem envolver a quantidade de sinistros e de óbitos no trânsito. O monitoramento do desempenho da segurança viária necessita de métodos que possibilitem a identificação precisa dos locais com cenários de agravamento ou melhoria, principalmente em escalas geográficas mais precisas, como os municípios.
+
+Nesse contexto, o objetivo deste trabalho é apresentar uma análise de tendência da sinistralidade no trânsito em municípios do estado de São Paulo, com base em dados do Infosiga.SP. A análise se concentra em identificar tendências de aumento ou redução na quantidade de óbitos e sinistros com vítimas feridas, considerando diferentes tipos de vias e modos de transporte.
+
+Trabalhos prévios avançaram na questão da análise de séries temporais de óbitos e sinistros, como @dereticSARIMAModellingApproach2022 que investigaram a série temporal mensal de sinistros entre 2016 e 2019 na Cidade de Belgrado, Sérvia, identificando um componente de sazonalidade. Indo além, @krickovicSpatialtemporalTrendAnalysis2024 analisaram a tendência dos sinistros de trânsito e os padrões espaciais em uma região do norte da Sérvia, desagregando a amostra em 45 municípios. 
+
+Para o presente estudo, a análise de tendência foi realizada com base no teste de Mann-Kendall, que é amplamente utilizado para detectar tendências em séries temporais. Observa-se que a tendência analisada neste trabalho é apenas um norte para diagnosticar a situação da segurança viária de um município. A análise de tendência não deve ser utilizada como um indicador isolado, mas sim como parte de uma avaliação mais abrangente que considere outros fatores relevantes.
+

@@ -1,0 +1,142 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Análise de Tendência da Sinistralidade em Municípios do Estado de São Paulo",
+    "section": "",
+    "text": "Sobre",
+    "crumbs": [
+      "Sobre"
+    ]
+  },
+  {
+    "objectID": "index.html#estrutura",
+    "href": "index.html#estrutura",
+    "title": "Análise de Tendência da Sinistralidade em Municípios do Estado de São Paulo",
+    "section": "Estrutura",
+    "text": "Estrutura",
+    "crumbs": [
+      "Sobre"
+    ]
+  },
+  {
+    "objectID": "index.html#ficha-técnica",
+    "href": "index.html#ficha-técnica",
+    "title": "Análise de Tendência da Sinistralidade em Municípios do Estado de São Paulo",
+    "section": "Ficha técnica",
+    "text": "Ficha técnica",
+    "crumbs": [
+      "Sobre"
+    ]
+  },
+  {
+    "objectID": "index.html#como-citar",
+    "href": "index.html#como-citar",
+    "title": "Análise de Tendência da Sinistralidade em Municípios do Estado de São Paulo",
+    "section": "Como citar",
+    "text": "Como citar",
+    "crumbs": [
+      "Sobre"
+    ]
+  },
+  {
+    "objectID": "01-introducao.html",
+    "href": "01-introducao.html",
+    "title": "1  Introdução",
+    "section": "",
+    "text": "A gestão da mobilidade segura tem como um de seus principais pilares o monitoramento do desempenho da segurança viária, através do acompanhamento de intervenções e de indicadores quantitativos, que podem envolver a quantidade de sinistros e de óbitos no trânsito. O monitoramento do desempenho da segurança viária necessita de métodos que possibilitem a identificação precisa dos locais com cenários de agravamento ou melhoria, principalmente em escalas geográficas mais precisas, como os municípios.\nNesse contexto, o objetivo deste trabalho é apresentar uma análise de tendência da sinistralidade no trânsito em municípios do estado de São Paulo, com base em dados do Infosiga.SP. A análise se concentra em identificar tendências de aumento ou redução na quantidade de óbitos e sinistros com vítimas feridas, considerando diferentes tipos de vias e modos de transporte.\nTrabalhos prévios avançaram na questão da análise de séries temporais de óbitos e sinistros, como Deretić et al. (2022) que investigaram a série temporal mensal de sinistros entre 2016 e 2019 na Cidade de Belgrado, Sérvia, identificando um componente de sazonalidade. Indo além, Kričković et al. (2024) analisaram a tendência dos sinistros de trânsito e os padrões espaciais em uma região do norte da Sérvia, desagregando a amostra em 45 municípios.\nPara o presente estudo, a análise de tendência foi realizada com base no teste de Mann-Kendall, que é amplamente utilizado para detectar tendências em séries temporais. Observa-se que a tendência analisada neste trabalho é apenas um norte para diagnosticar a situação da segurança viária de um município. A análise de tendência não deve ser utilizada como um indicador isolado, mas sim como parte de uma avaliação mais abrangente que considere outros fatores relevantes.\n\n\n\n\nDeretić, Nemanja, Dragan Stanimirović, Mohammed Al Awadh, Nikola Vujanović, e Aleksandar Djukić. 2022. “SARIMA Modelling Approach for Forecasting of Traffic Accidents”. Sustainability 14 (8): 4403. https://doi.org/10.3390/su14084403.\n\n\nKričković, Emina, Tin Lukić, Tanja Srejić, Anastazija Stojšić-Milosavljević, Vladimir Stojanović, e Zoran Kričković. 2024. “Spatial-Temporal and Trend Analysis of Traffic Accidents in AP Vojvodina (North Serbia)”. Open Geosciences 16 (1): 20220630. https://doi.org/10.1515/geo-2022-0630.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introdução</span>"
+    ]
+  },
+  {
+    "objectID": "02-metodologia.html",
+    "href": "02-metodologia.html",
+    "title": "2  Metodologia",
+    "section": "",
+    "text": "2.1 Tratamento dos dados\nO trabalho foi realizado com base nos dados abertos do Sistema de Informações Gerenciais de Sinistros de Trânsito do Estado de São Paulo - Infosiga.SP (Detran-SP 2025), considerando a quantidade de óbitos e sinistros com vítimas leves a graves. Para a aplicação do método de Mann-Kendall, foram considerados os dados de óbitos entre janeiro de 2015 e fevereiro de 2025 em escala mensal.\nPara os dados de sinistros com feridos leves a graves, foi considerado o período entre janeiro de 2019 e fevereiro de 2025, também em escala mensal, desconsiderando os sinistros que resultaram em óbitos e desconsiderando as ocorrências identificadas como “notificação”. A janela temporal foi selecionada considerando que o sistema não possui o registro de sinistros não fatais antes de 2019.\nPara os óbitos e sinistros com vítimas feridas (leves e graves), buscou-se analisar de forma separada os eventos classificados por tipo de via (Vias urbanas, Estradas e rodovias) e por modo de transporte da vítima (a pé, bicicleta, motocicleta). Para o período dos óbitos, considerou-se o atributo data_obito, e para o filtro do período do sinistro foi considerado o atributo data_sinistro, com filtro para as ocorrências registradas como SINISTRO NAO FATAL. Com a chave municipio, os dados foram agrupados de acordo com os 645 municípios do estado e pelo mês/ano registrado. Com isso, foram criadas 645 séries temporais mensais para cada um dos objetos em análise. Todo o processo foi desenvolvido com o auxílio da linguagem de programação R (R Core Team 2024).",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Metodologia</span>"
+    ]
+  },
+  {
+    "objectID": "02-metodologia.html#teste-de-mann-kendall",
+    "href": "02-metodologia.html#teste-de-mann-kendall",
+    "title": "2  Metodologia",
+    "section": "2.2 Teste de Mann-Kendall",
+    "text": "2.2 Teste de Mann-Kendall\nO Teste de Mann-Kendall (MK) é um método estatístico não paramétrico1 utilizado para detectar tendências monotônicas2 em séries temporais. Por não assumir uma distribuição específica dos dados, é especialmente útil em estudos ambientais, hidrológicos e climáticos, onde os dados podem apresentar variabilidade significativa e não seguir distribuições normais (Mann 1945; Kendall 1975).\nO teste avalia se há uma tendência crescente ou decrescente ao longo do tempo, sem exigir que essa tendência seja linear. A estatística de teste é baseada no número de pares ordenados de observações em que os valores posteriores são maiores ou menores que os anteriores. A significância da tendência é avaliada por meio do \\(p\\)-valor associado à estatística de Mann-Kendall, permitindo inferir se a tendência observada é aleatória ou não.\nUm dos resultados numéricos do teste é o coeficiente Tau, que é uma medida de correlação que expressa a direção e a força da tendência em uma série temporal. Seu valor varia entre -1 e 1, onde valores próximos a 1 indicam uma forte tendência crescente, valores próximos a -1 indicam uma forte tendência decrescente e valores próximos a 0 sugerem ausência de tendência. O método não faz análise da grandeza dos valores, assim, o Tau representa apenas a tendência dos valores. Para o presente trabalho, o MK foi aplicado com auxílio da biblioteca {trend} da linguagem R (Pohlert 2015).\n\n\n\n\nDetran-SP. 2025. “Sistema de Informações Gerenciais de Sinistros de Trânsito Do Estado de São Paulo - Dados Abertos”. https://www.infosiga.sp.gov.br/.\n\n\nKendall, Maurice G. 1975. Rank Correlation Methods. 4. ed., 2. impr. London: Griffin.\n\n\nMann, Henry B. 1945. “Nonparametric Tests Against Trend”. Econometrica 13 (3): 245. https://doi.org/10.2307/1907187.\n\n\nPohlert, Thorsten. 2015. “Trend: Non-Parametric Trend Tests and Change-Point Detection”. Comprehensive R Archive Network. https://doi.org/10.32614/CRAN.package.trend.\n\n\nR Core Team. 2024. R: A Language and Environment for Statistical Computing. Manual. Vienna, Austria: R Foundation for Statistical Computing.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Metodologia</span>"
+    ]
+  },
+  {
+    "objectID": "02-metodologia.html#footnotes",
+    "href": "02-metodologia.html#footnotes",
+    "title": "2  Metodologia",
+    "section": "",
+    "text": "Um teste não paramétrico é um teste estatístico que não assume que os dados seguem uma distribuição específica, como a normal. Ele é baseado em ordens, sinais ou rankings dos dados, e não nos próprios valores numéricos.↩︎\nTendências monotônicas são padrões de comportamento em uma série temporal onde os valores seguem consistentemente uma única direção ao longo do tempo — sempre aumentando ou sempre diminuindo, embora não necessariamente de forma linear ou constante.↩︎",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Metodologia</span>"
+    ]
+  },
+  {
+    "objectID": "03-resultados.html",
+    "href": "03-resultados.html",
+    "title": "3  Resultados",
+    "section": "",
+    "text": "3.1 Óbitos\nOs resultados foram organizados entre as análises para os dados de óbitos (Seção 3.1), dados dos sinistros com feridos leves e graves (Seção 3.2) e uma tabela-resumo dos municípios (Seção 3.3)\nA Seção 3.1.1 apresenta os resultados com tendência de aumento, enquanto a Seção 3.1.2 apresenta os resultados com tendência de redução. Os mapas da Seção 3.1.3 consolidam os resultados de tendência de óbitos nos municípios.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Resultados</span>"
+    ]
+  },
+  {
+    "objectID": "03-resultados.html#sec-results-obitos",
+    "href": "03-resultados.html#sec-results-obitos",
+    "title": "3  Resultados",
+    "section": "",
+    "text": "3.1.1 Tendência de aumento\nEntre a Tabela 3.1 e a Tabela 3.6 estão apresentados os municípios com tendência de aumento na quantidade de óbitos no trânsito, ordenados pelo valor do Tau. Quanto maior o valor de Tau, maior a intensidade de tendência de aumento.\nNessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos (\\(p\\)-valor &lt; 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de aumento:\n\nÓbitos totais: 29 municípios\nÓbitos em vias urbanas: 10 municípios\nÓbitos em estradas e rodovias: 61 municípios\nÓbitos - pedestres: 12 municípios\nÓbitos - ciclistas: 11 municípios\nÓbitos - ocupantes de motocicleta: 47 municípios\n\n\nTotalVias urbanasEstradas e rodoviasPedestresCiclistasOcupantes de motocicleta\n\n\n\n\n\n\nTabela 3.1: Municípios com tendência significativa de aumento na quantidade de óbitos\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.2: Municípios com tendência significativa de aumento na quantidade de óbitos em vias urbanas\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.3: Municípios com tendência significativa de aumento na quantidade de óbitos em estradas e rodovias\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.4: Municípios com tendência significativa de aumento na quantidade de óbitos de pedestres\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.5: Municípios com tendência significativa de aumento na quantidade de óbitos de ciclistas\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.6: Municípios com tendência significativa de aumento na quantidade de óbitos de ocupantes de motocicleta\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n3.1.2 Tendência de redução\nEntre a Tabela 3.7 e a Tabela 3.12 estão apresentados os municípios com tendência de redução na quantidade de óbitos no trânsito, ordenados pelo valor do Tau. Quanto menor o valor de Tau, maior a intensidade de tendência de redução.\nNessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos (\\(p\\)-valor &lt; 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de redução:\n\nÓbitos totais: 28 municípios\nÓbitos em vias urbanas: 72 municípios\nÓbitos em estradas e rodovias: 17 municípios\nÓbitos - pedestres: 30 municípios\nÓbitos - ciclistas: 3 municípios\nÓbitos - ocupantes de motocicleta: 6 municípios\n\n\nTotalVias urbanasEstradas e rodoviasPedestresCiclistasOcupantes de motocicleta\n\n\n\n\n\n\nTabela 3.7: Municípios com tendência significativa de redução na quantidade de óbitos\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.8: Municípios com tendência significativa de redução na quantidade de óbitos em vias urbanas\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.9: Municípios com tendência significativa de redução na quantidade de óbitos em estradas e rodovias\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.10: Municípios com tendência significativa de redução na quantidade de óbitos de pedestres\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.11: Municípios com tendência significativa de redução na quantidade de óbitos de ciclistas\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.12: Municípios com tendência significativa de redução na quantidade de óbitos de ocupantes de motocicleta\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2015 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n3.1.3 Mapas de tendência\nOs mapas a seguir apresentam a tendência de aumento ou redução na quantidade de óbitos no trânsito nos municípios do estado de São Paulo, considerando também as tendências sem significância estatística. Os municípios classificados com “tendência de aumento (significativo)” apresentam um valor de Tau acima de 0 e um \\(p\\)-valor abaixo de 0,05. Os municípios classificados com “tendência de aumento (não significativo)” apresentam um valor de Tau acima de 0 e um \\(p\\)-valor acima de 0,05.\nOs municípios classificados com “tendência de redução (significativo)” apresentam um valor de Tau abaixo de 0 e um \\(p\\)-valor abaixo de 0,05. Os municípios classificados com “tendência de redução (não significativo)” apresentam um valor de Tau abaixo de 0 e um \\(p\\)-valor acima de 0,05.\n\nTotalVias urbanasEstradas e rodoviasPedestresCiclistasOcupantes de motocicleta\n\n\n\n\n\n\nFigura 3.1: Mapa da tendência resultante, considerando os óbitos\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3.2: Mapa da tendência resultante, considerando os óbitos em vias urbanas\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3.3: Mapa da tendência resultante, considerando os óbitos em estradas e rodovias\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3.4: Mapa da tendência resultante, considerando os óbitos de pedestres\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3.5: Mapa da tendência resultante, considerando os óbitos de ciclistas\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3.6: Mapa da tendência resultante, considerando os óbitos de ocupantes de motocicleta",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Resultados</span>"
+    ]
+  },
+  {
+    "objectID": "03-resultados.html#sec-results-sinistros",
+    "href": "03-resultados.html#sec-results-sinistros",
+    "title": "3  Resultados",
+    "section": "3.2 Sinistros com Feridos Leves e Graves",
+    "text": "3.2 Sinistros com Feridos Leves e Graves\n\n3.2.1 Tendência de aumento\nEntre a Tabela 3.13 e a Tabela 3.18 estão apresentados os municípios com tendência de aumento na quantidade de sinistros com feridos leves e graves, ordenados pelo valor do Tau. Quanto maior o valor de Tau, maior a intensidade de tendência de aumento.\nNessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos (\\(p\\)-valor &lt; 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de aumento:\n\nSinistros com vítimas feridas (leves e graves): 154 municípios\nSinistros com vítimas feridas (leves e graves - vias urbanas): 199 municípios\nSinistros com vítimas feridas (leves e graves - estradas e rodovias): 46 municípios\nSinistros com vítimas feridas (leves e graves) - pedestres: 50 municípios\nSinistros com vítimas feridas (leves e graves) - ciclistas: 51 municípios\nSinistros com vítimas feridas (leves e graves) - ocupantes de motocicleta: 141 municípios\n\n\nTotalVias urbanasEstradas e rodoviasPedestresCiclistasOcupantes de motocicleta\n\n\n\n\n\n\nTabela 3.13: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.14: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves - vias urbanas)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.15: Municípios com tendência significativa de aumento na quantidade de sinistros com vítimas feridas (leves e graves - estradas e rodovias)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.16: Municípios com tendência significativa de aumento na quantidade de sinistros com pedestres feridos (leves e graves)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.17: Municípios com tendência significativa de aumento na quantidade de sinistros com ciclistas feridos (leves e graves)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.18: Municípios com tendência significativa de aumento na quantidade de sinistros com ocupantes de motocicleta feridos (leves e graves)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n3.2.2 Tendência de redução\nEntre a Tabela 3.19 e a Tabela 3.24 estão apresentados os municípios com tendência de redução na quantidade de sinistros com feridos leves e graves, ordenados pelo valor do Tau. Quanto menor o valor de Tau, maior a intensidade de tendência de redução.\nNessas tabelas, foram considerados apenas os municípios com resultados estatisticamente significativos (\\(p\\)-valor &lt; 0,05). Em resumo, tem-se a seguinte quantidade de municípios com tendência de redução:\n\nSinistros com vítimas feridas (leves e graves): 32 municípios\nSinistros com vítimas feridas (leves e graves - vias urbanas): 15 municípios\nSinistros com vítimas feridas (leves e graves - estradas e rodovias): 73 municípios\nSinistros com vítimas feridas - pedestres (leves e graves): 15 municípios\nSinistros com vítimas feridas - ciclistas (leves e graves): 9 municípios\nSinistros com vítimas feridas - ocupantes de motocicleta (leves e graves): 31 municípios\n\n\nTotalVias urbanasEstradas e rodoviasPedestresCiclistasOcupantes de motocicleta\n\n\n\n\n\n\nTabela 3.19: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.20: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves - vias urbanas)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.21: Municípios com tendência de redução na quantidade de sinistros com vítimas feridas (leves e graves - estradas e rodovias)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.22: Municípios com tendência de redução na quantidade de sinistros com pedestres feridos (leves e graves)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.23: Municípios com tendência de redução na quantidade de sinistros com ciclistas feridos (leves e graves)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 3.24: Municípios com tendência de redução na quantidade de sinistros com ocupantes de motocicleta feridos (leves e graves)\n\n\n\n\n\n\n\n\n\n\n1 Período entre 2019 e 2024\n2 A linha tracejada representa a média da série temporal.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n3.2.3 Mapas de tendência\nOs mapas a seguir apresentam a tendência de aumento ou redução na quantidade de sinistros com feridos leves e graves no trânsito nos municípios do estado de São Paulo, considerando também as tendências sem significância estatística. Os municípios classificados com “tendência de aumento (significativo)” apresentam um valor de Tau acima de 0 e um \\(p\\)-valor abaixo de 0,05. Os municípios classificados com “tendência de aumento (não significativo)” apresentam um valor de Tau acima de 0 e um \\(p\\)-valor acima de 0,05.\nOs municípios classificados com “tendência de redução (significativo)” apresentam um valor de Tau abaixo de 0 e um \\(p\\)-valor abaixo de 0,05. Os municípios classificados com “tendência de redução (não significativo)” apresentam um valor de Tau abaixo de 0 e um \\(p\\)-valor acima de 0,05.\n\nTotalVias urbanasEstradas e rodoviasPedestresCiclistasOcupantes de motocicleta\n\n\n\n\n\n\nFigura 3.7: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3.8: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves) em vias urbanas\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3.9: Mapa da tendência resultante, considerando os sinistros com vítimas feridas (leves e graves) em estradas e rodovias\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3.10: Mapa da tendência resultante, considerando os sinistros com pedestres feridos (leves e graves)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3.11: Mapa da tendência resultante, considerando os sinistros com ciclistas feridos (leves e graves)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3.12: Mapa da tendência resultante, considerando os sinistros com ocupantes de motocicleta feridos (leves e graves)",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Resultados</span>"
+    ]
+  },
+  {
+    "objectID": "03-resultados.html#sec-results-tbl-resumo",
+    "href": "03-resultados.html#sec-results-tbl-resumo",
+    "title": "3  Resultados",
+    "section": "3.3 Tabela-resumo",
+    "text": "3.3 Tabela-resumo\nA Tabela 3.25 apresenta a lista dos 645 municípios do estado e indica se ele possui alguma tendência significativa de aumento considerando as categorias anteriormente apresentadas.\n\n\n\n\nTabela 3.25: Municípios com tendência de aumento de óbitos e/ou sinistros com vítimas (leves e graves)",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Resultados</span>"
+    ]
+  },
+  {
+    "objectID": "04-conclusao.html",
+    "href": "04-conclusao.html",
+    "title": "4  Conclusão",
+    "section": "",
+    "text": "A gestão da segurança viária tem como um importante pilar o monitoramento e a gestão da informação de dados e indicadores relacionados ao desempenho da mobilidade segura. Buscando novos métodos de realizar essa atividade, este trabalho traz a aplicação do teste de Mann-Kendall com base em séries temporais mensais de óbitos e sinistros não fatais, em escala geográfica municipal.\nO método por si só não é suficiente para o diagnóstico completo do desempenho da segurança viária nos municípios do estado, mas apresenta mais uma camada de informação importante, principalmente para avaliar os cenários tendenciosos, e não apenas os valores atuais de óbitos e sinistros. Entende-se que futuros trabalhos podem incluir métodos de clusterização dos municípios e métodos para identificar padrões espaciais da tendência, por meio da análise de autocorrelação dos dados, e também a aplicação do método em diferentes janelas temporais.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Conclusão</span>"
+    ]
+  },
+  {
+    "objectID": "05-referencias.html",
+    "href": "05-referencias.html",
+    "title": "Referências",
+    "section": "",
+    "text": "Deretić, Nemanja, Dragan Stanimirović, Mohammed Al Awadh, Nikola\nVujanović, and Aleksandar Djukić. 2022. “SARIMA Modelling\nApproach for Forecasting of Traffic\nAccidents.” Sustainability 14 (8): 4403. https://doi.org/10.3390/su14084403.\n\n\nDetran-SP. 2025. “Sistema de Informações Gerenciais\nde Sinistros de Trânsito Do\nEstado de São Paulo - Dados\nAbertos.” https://www.infosiga.sp.gov.br/.\n\n\nKendall, Maurice G. 1975. Rank Correlation Methods. 4. ed., 2.\nimpr. London: Griffin.\n\n\nKričković, Emina, Tin Lukić, Tanja Srejić, Anastazija\nStojšić-Milosavljević, Vladimir Stojanović, and Zoran Kričković. 2024.\n“Spatial-Temporal and Trend Analysis of Traffic Accidents in\nAP Vojvodina (North Serbia).” Open\nGeosciences 16 (1): 20220630. https://doi.org/10.1515/geo-2022-0630.\n\n\nMann, Henry B. 1945. “Nonparametric Tests Against\nTrend.” Econometrica 13 (3): 245. https://doi.org/10.2307/1907187.\n\n\nPohlert, Thorsten. 2015. “Trend: Non-Parametric Trend\nTests and Change-Point Detection.”\nComprehensive R Archive Network. https://doi.org/10.32614/CRAN.package.trend.\n\n\nR Core Team. 2024. R: A Language and Environment for\nStatistical Computing. Manual. Vienna, Austria: R Foundation for\nStatistical Computing.",
+    "crumbs": [
+      "Referências"
+    ]
+  }
+]
