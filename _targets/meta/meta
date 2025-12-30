@@ -4,9 +4,7 @@ input_tipo_via|stem|40b129bca235e2e0|e8dc07b9c6fd8ce0|2c530c1562a7fbd1|-17491983
 df_populacao|stem|6d860d18012c33de|86461c193f7603fc|127c05b2b63187f2|1291778507||t20286.6474115582s|s4775b|4775|rds|local|vector|||0.958||
 base_path|stem|38b41ab029f25f7e|a0e841e64b2b068f|2c530c1562a7fbd1|-660591588|data/divisoes_regionais_esp.csv|t20178.5603336217s|s73836b|73836|file|local|vector|||0||
 sf_municipios|stem|0c1ef957ccd84e05|7c0796e8ed0cce28|c7494d0103b25380|-433777918||t20286.6474534563s|s1382409b|1382409|rds|local|vector|||3.562||
-path_snt|stem|1962ce784fade665|2e1eb71be38f298f|2c530c1562a7fbd1|-433482245|data/snt_municipios.xlsx|t20187.5647577653s|s36482b|36482|file|local|vector|||0.878||
 df_base|stem|423e6d574d4c5b7c|ca1c940e9cf1b559|68af975b5508ef85|912913709||t20286.6474984795s|s7431b|7431|rds|local|vector|||0.062||
-df_snt|stem|03120c681b246803|958a48c41fb8a9d3|285b4c0989075f23|116760189||t20286.6474985952s|s2204b|2204|rds|local|vector|||0.005||
 detran_palette|stem|d19105c0397c5fd7|8d410db3a163ec0f|2c530c1562a7fbd1|-545819114||t20286.8715597107s|s150b|150|rds|local|vector|||1.142||
 path_infosiga|stem|fddad17da803752c|84fad55717a21fe8|2c530c1562a7fbd1|-1665749802|data/dados_infosiga.zip|t20451.7561238866s|s110826108b|110826108|file|local|vector|||0.774||
 infosiga_sinistros|stem|7d1a8daac56d13f2|841ab1ad4c64ddbd|fc000f511d452d36|-2129405166||t20451.7592801827s|s36400473b|36400473|rds|local|vector|||13.476||
@@ -24,15 +22,6 @@ list_mk_results|stem|1cc47192cdf470c2|b9a4758a686e146b|50cf7bd92cab4fab|-6243150
 list_df_mk_results|stem|c3e1374650300840|1644e57c80875a0f|68d4b147c84bc161|1548820727||t20451.7787454556s|s185091b|185091|rds|local|vector|||4.977||
 input_list|stem|b4f824a6c6017b2c|efddbf8470275b09|d7953eab6aaecc37|-1617961909||t20451.7787511269s|s738244b|738244|rds|local|vector|||0||
 df_final_raw|stem|cb68dc5be989a209|08d4516d0d8c16c8|105f2f12b8bcf3e5|1360285925||t20451.7787600389s|s251862b|251862|rds|local|vector|||0.544||
-df_final|stem|c5e74665e5e9c9ad|7b42c1fdfdad897f|a56e7992797cb7da|1900389646||t20451.7787610806s|s265476b|265476|rds|local|vector|||0.006||
-list_sf|stem|b805f7d95a041171|fa98319c3c282bc5|fdc6175ec227272e|708308966||t20451.7787746223s|s16889514b|16889514|rds|local|vector|||0.184||
-gt_resumo|stem|838d21d9e9db16bd|0731f1c3319c0302|a8de9c7811a6a172|-1883774568||t20451.7787777473s|s344787b|344787|rds|local|vector|||0.102||
-list_gt_tendencia_neg|stem|42a625e61acd5cb3|6da3b53dde5af724|645470e18f0f175a|152838369||t20451.7788319139s|s2058338b|2058338|rds|local|vector|||3.986||
-list_mun_count_neg|stem|ef61870f2f230da5|072a2662ed491d71|ede302c89cb18922|482291579||t20451.7788355019s|s83b|83|rds|local|vector|||0.077||
-list_gt_tendencia_pos|stem|5eb3746884b98655|43698626547394ee|645470e18f0f175a|1953687512||t20451.7789459186s|s2860814b|2860814|rds|local|vector|||8.981||
-list_mun_count_pos|stem|5c102059005bec4a|249355bd3fd2eb99|ede302c89cb18922|285750243||t20451.7789493908s|s85b|85|rds|local|vector|||0.072||
-tendencia_maps|stem|71bfa365127d6c75|af9c748e30db87ff|34216cc804eb1e31|-126226107||t20451.7789941825s|s67512347b|67512347|rds|local|vector|||0.953|sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'|
-df_final_export|stem|d4b4a1794f06bfb8|84e597ecff59b197|1b272b6416605188|-131067547|data/df_final.csv|t20451.7829860794s|s699588b|699588|file|local|vector|||0.169||
 path_export_csv|stem|d4b4a1794f06bfb8|86e1e4626fb62859|2c530c1562a7fbd1|134510534|data/df_final.csv|t20451.7829860794s|s699588b|699588|file|local|vector|||0.788||
 filter_mun_criticos|function|aa4ff2cc65645146
 export_final_data|function|e1c804ad80575b13
@@ -43,7 +32,7 @@ create_time_series|function|a96e99d97398a059
 load_sinistros_vitimas|function|8187d9a2031aff2a
 make_tendencia_gt|function|c5ed3010a79ca062
 arrange_final_results|function|a7002f090c9ce1ce
-.Random.seed|object|1fabde062e91e8f4
+.Random.seed|object|713b26a7b054e828
 set_list_names|function|18a2cc9a0e0a7293
 create_model_df|function|004b1269bc36aead
 make_plotly|function|c695e123baece7d6
@@ -55,5 +44,16 @@ get_infosiga_data|function|f891dfc51104a11d
 load_municipios|function|acde0f3eac40a58d
 arrange_mk_sf|function|b2360a2cf1077183
 make_gt_resumo|function|490bf366df69e230
-load_snt|function|6c1a88bde32824c8
-report|stem|e524685f54c76c69|5d755bd7a527b315|2406ffd4b61a7ca8|787668912|_book*01-introducao.qmd*02-metodologia.qmd*03-resultados.qmd*04-conclusao.qmd*05-referencias.qmd*index.qmd*_quarto.yml|t20452.553275121s|s57493694b|57493694|file|local|vector|||48.453||
+load_snt|function|211fc8cfe7a60c57
+path_snt|stem|4365736b29e1f4cd|678229ce447826eb|2c530c1562a7fbd1|-433482245|data/snt_municipios.csv|t20452.5905421076s|s8606b|8606|file|local|vector|||0.717||
+df_snt|stem|85094732773554ef|958a48c41fb8a9d3|5d246b7564537918|116760189||t20452.5937432819s|s2222b|2222|rds|local|vector|||0.156||
+df_final|stem|2c85f41ec1eea7e7|7b42c1fdfdad897f|646a594fb0a93fce|1900389646||t20452.5937446708s|s265076b|265076|rds|local|vector|||0.01||
+list_sf|stem|c0f2626c98ef4c2e|fa98319c3c282bc5|e4b3a71467d39cdf|708308966||t20452.5937586754s|s16889007b|16889007|rds|local|vector|||0.296||
+gt_resumo|stem|683930fe053ea0ef|0731f1c3319c0302|36a90613f9b27275|-1883774568||t20452.5937612217s|s344747b|344747|rds|local|vector|||0.107||
+df_final_export|stem|33b8bb5bbf05573d|84e597ecff59b197|606573de4eb61191|-131067547|data/df_final.csv|t20452.5937627263s|s698796b|698796|file|local|vector|||0.102||
+list_gt_tendencia_neg|stem|2e86ae5109d1c1e1|6da3b53dde5af724|27cf050c36d8e1c7|152838369||t20452.5938151569s|s2056930b|2056930|rds|local|vector|||4.058||
+list_mun_count_neg|stem|ef61870f2f230da5|072a2662ed491d71|e7917b6dfc0c4749|482291579||t20452.5938186291s|s83b|83|rds|local|vector|||0.085||
+list_gt_tendencia_pos|stem|72cfb6e2ffe0a56c|43698626547394ee|27cf050c36d8e1c7|1953687512||t20452.5939270781s|s2859796b|2859796|rds|local|vector|||8.71||
+list_mun_count_pos|stem|5c102059005bec4a|249355bd3fd2eb99|e7917b6dfc0c4749|285750243||t20452.5939306661s|s85b|85|rds|local|vector|||0.091||
+tendencia_maps|stem|0cc2ebbf6d3f5229|af9c748e30db87ff|e2678182351c9838|-126226107||t20452.5939767309s|s67511014b|67511014|rds|local|vector|||1.061|sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'. sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'|
+report|stem|ed9ffef200a01456|583ea3127a91fb41|2348c895df5ac198|787668912|docs*01-introducao.qmd*02-metodologia.qmd*03-resultados.qmd*04-conclusao.qmd*05-referencias.qmd*index.qmd*_quarto.yml|t20452.5945832123s|s57503723b|57503723|file|local|vector|||51.365||

@@ -183,8 +183,8 @@ load_sinistros_vitimas <- function(
 #'
 #' @export
 load_snt = function(path) {
-    read_excel(path) |>
-        mutate(
+    readr::read_csv2(path) |>
+        dplyr::mutate(
             cod_ibge = as.character(cod_ibge),
             integrado_snt = if_else(
                 integrado_snt == "SIM",

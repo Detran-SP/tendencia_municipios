@@ -100,7 +100,7 @@ list(
         )
     ),
     tar_target(sf_municipios, load_mun_sf()),
-    tar_target(path_snt, "data/snt_municipios.xlsx", format = "file"),
+    tar_target(path_snt, "data/snt_municipios.csv", format = "file"),
     tar_target(df_snt, load_snt(path_snt)),
     ## Modelagem
     tar_target(list_df_model, c(list_df_model_obitos, list_df_model_sinistros)),
