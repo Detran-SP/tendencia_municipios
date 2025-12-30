@@ -20,6 +20,8 @@ book:
     - 03-resultados.qmd
     - 04-conclusao.qmd
     - 05-referencias.qmd
+  # navbar:
+  #   logo: img/
 
 bibliography: refs.bib
 
