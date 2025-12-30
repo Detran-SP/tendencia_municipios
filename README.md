@@ -6,9 +6,9 @@ Esse repositório contém o código de cálculo e renderização da nota técnic
 
 ## Estrutura
 
-O projeto está organizado como um **Quarto Book**. O arquivo `_quarto.yml` contém a configuração do book. Os capítulos estão na raiz do projeto:
+O arquivo `_quarto.yml` contém a configuração do relatório e o `_brand.yml` configura o estilo. Os capítulos estão na raiz do projeto:
 
-- `index.qmd` - Página inicial do book (contém setup e configurações)
+- `index.qmd` - Página inicial
 - `01-introducao.qmd` - Introdução
 - `02-metodologia.qmd` - Metodologia
 - `03-resultados.qmd` - Resultados
@@ -19,27 +19,23 @@ Os scripts em `R/` apresentam todas as funções utilizadas para os cálculos. E
 
 ## Requisitos
 
-- R >= 4.3
-- quarto >= 1.7
+- [R](https://cran.r-project.org/) >= 4.3
+- [quarto](https://quarto.org) >= 1.7
 
 ## Execução
 
-1. Instalação das dependências do projeto através do pacote `{renv}`:
+1. Faça o download dos dados abertos do [Infosiga](https://infosiga.detran.sp.gov.br/rest/painel/download/file/dados_infosiga.zip) e insira na pasta `data` (`data/dados_infosiga.zip`)
+
+2. Instalação das dependências do projeto através do pacote `{renv}`:
 
 ```r
 renv::restore()
 ```
 
-2. Execução do pipeline com `{targets}`
+3. Execução do pipeline com `{targets}`
 
 ```r
 targets::tar_make()
 ```
 
-3. Renderização do book com o [Quarto](https://quarto.org/):
-
-```
-quarto render
-```
-
-O comando `quarto render` irá renderizar todo o book conforme configurado no arquivo `_quarto.yml`. O resultado será gerado no diretório `_book/`.
+O relatório renderizado é exportado para em `docs/index.html`.
