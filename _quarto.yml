@@ -1,5 +1,6 @@
 project:
   type: book
+  output-dir: docs
 
 book:
   title: "Análise de Tendência da Sinistralidade em Municípios do Estado de São Paulo"

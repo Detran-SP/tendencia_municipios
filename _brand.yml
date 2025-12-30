@@ -13,8 +13,12 @@ typography:
   link:
     color: darkblue
     decoration: underline
+
 color:
   palette:
     blue: "#005CA8"
     darkblue: "#004077"
   primary: darkblue
+
+logo:
+  medium: "img/POLI_HORIZONTAL.png"
